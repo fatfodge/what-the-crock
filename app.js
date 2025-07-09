@@ -5,7 +5,7 @@ import { auth } from './firebase.js';
 //import { initializeMap, centerMapOnUser, loadRestaurantPins, getMapInstance, setdisplayRestaurantDetailsCb } from './map.js';
 import { initializeMap, centerMapOnUser, getMapInstance, setdisplayRestaurantDetailsCb } from './map.js';
 
-import { initAutoComplete } from './autocomplete.js';
+import { initAutoComplete } from './autoComplete.js';
 import {
     initializeUIElements,
     setBottomPanelState,
