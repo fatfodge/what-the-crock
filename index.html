@@ -11,6 +11,13 @@
 
     <!-- Your CSS -->
     <link rel="stylesheet" href="style.css">
+    <script type="importmap">
+        {
+            "imports": {
+https://cdn.jsdelivr.net/npm/geofire-common@6.0.0/dist/geofire-common/geofire-common.min.js
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -52,7 +59,7 @@
                 </ul>
             </div>
 
-            <div id="restaurants-in-view" style ="display:none;">
+            <div id="restaurants-in-view" style="display:none;">
                 <button class="restaurant-closeBtn" type="button">x</button>
                 <h3 id="allRestaurantsHeader" style="display:none;">Available Restaurants:</h3>
                 <ul id="all-visible-restaurants"
