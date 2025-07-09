@@ -1,0 +1,21 @@
+{
+  "name": "what-the-crock",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "dev": "vite",        
+    "build": "vite build", 
+    "preview": "vite preview" 
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "geofire-common": "^6.0.0", 
+    "hammerjs": "^X.Y.Z"       
+  },
+  "devDependencies": {
+    "vite": "^7.0.3"           
+  }
+}

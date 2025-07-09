@@ -1,0 +1,40 @@
+{
+    "reviews": [
+        {
+            "id": 1,
+            "name": "La Table Française",
+            "location": {
+                "lat": 27.9506,
+                "lng": -82.4572
+            },
+            "address": "123 Bay St, Tampa, FL",
+            "rating": 4.7,
+            "review": "Rich broth, perfectly caramelized onions, and the gruyère was top-tier. Bread held up well!",
+            "date": "2025-06-25"
+        },
+        {
+            "id": 2,
+            "name": "Brothy’s Bites",
+            "location": {
+                "lat": 27.9448,
+                "lng": -82.4629
+            },
+            "address": "456 Downtown Ave, Tampa, FL",
+            "rating": 3.9,
+            "review": "Good flavor but the cheese had slipped off the toast. Bonus points for crispy onions on top.",
+            "date": "2025-06-26"
+        },
+        {
+            "id": 3,
+            "name": "The Crock Pot Inn",
+            "location": {
+                "lat": 27.9378,
+                "lng": -82.5045
+            },
+            "address": "789 Westshore Blvd, Tampa, FL",
+            "rating": 4.2,
+            "review": "Classic presentation. Slightly salty, but great texture on the cheese crust.",
+            "date": "2025-06-27"
+        }
+    ]
+}
