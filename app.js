@@ -44,7 +44,7 @@ const header = document.querySelector('header');
 const footer = document.querySelector('footer');
 const main = document.querySelector('main');
 
-function showViewportDimensions() {
+/*function showViewportDimensions() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
 
@@ -61,28 +61,19 @@ function showViewportDimensions() {
         `visualViewport.height: ${visualViewportHeight}px\n` +
         `(visualViewport is the *visible* area, accounting for keyboard)`
     );
-}
+}*/
 
 function adjustMainHeight() {
     if (!main || !header || !footer) return;
 
-
+    const windowHeight = window.innerHeight;
     const visualViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-    const headerHeight = header.offsetHeight;
-    const footerHeight = footer.offsetHeight;
-
-    showViewportDimensions();
 
 
-    // Calculate height for main based on the current *visual* viewport
-    const calculatedMainHeight = visualViewportHeight - headerHeight - footerHeight;
 
-    // Apply it directly
-    main.style.height = `${calculatedMainHeight}px`;
-
-    // Also ensure main is correctly positioned from the top if needed
-    // If you are using flex-grow: 1, you don't need to set top/bottom on main
-    // If you were using position: fixed for main, you'd set its top/bottom
+    if ((windowHeight - visualViewportHeight) > 0) {
+        alert('update window ht');
+    }
 }
 
 if (window.visualViewport) {
@@ -109,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 3. Set up Firebase Auth listener and UI callbacks
     // Pass the new displayRestaurantDetails function to the Firebase service
     //setFirebaseUICallbacks(setProfileSheetState, loadRestaurantPins, displayRestaurantDetails);
-    setFirebaseUICallbacks(setProfileSheetState, displayRestaurantDetails,getMapBounds);
+    setFirebaseUICallbacks(setProfileSheetState, displayRestaurantDetails, getMapBounds);
 
     setupAuthListener();
 
