@@ -45,6 +45,7 @@ const footer = document.querySelector('footer');
 const main = document.querySelector('main');
 
 let totalViewportHt;
+let mainHeight;
 
 /*function showViewportDimensions() {
     const windowWidth = window.innerWidth;
@@ -68,11 +69,12 @@ let totalViewportHt;
 function adjustMainHeight() {
     if (!main || !header || !footer) return;
 
-    const windowHeight = window.innerHeight;
     const visualViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    const visualDelta =  visualViewportHeight - totalViewportHt;
+    const newMainHt = mainHeight - visualDelta
+    //alert(totalViewportHt - visualViewportHeight);
+    main.style.height = `${newMainHt}px`;
 
-
-    alert(totalViewportHt - visualViewportHeight);
 }
 
 if (window.visualViewport) {
@@ -80,11 +82,43 @@ if (window.visualViewport) {
 } else {
     window.addEventListener('resize', adjustMainHeight); // Fallback for older browsers
 }
+
+function lockToPortrait() {
+    // Check if the Screen Orientation API is supported
+    if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('portrait')
+            .then(() => {
+                console.log('Screen orientation locked to portrait.');
+            })
+            .catch((error) => {
+                console.warn('Failed to lock screen orientation:', error);
+                // This typically fails if:
+                // 1. Not in fullscreen mode
+                // 2. Not triggered by a user gesture (e.g., button click)
+                // 3. Browser doesn't support it or user has restrictions
+            });
+    } else {
+        console.warn('Screen Orientation API not supported or lock method unavailable.');
+        // Fallback or inform user
+    }
+}
 window.addEventListener('load', adjustMainHeight);
 
 // Main application initialization
 document.addEventListener('DOMContentLoaded', async () => {
+    lockToPortrait();
     totalViewportHt = window.innerHeight;
+    const mainElement = document.querySelector('main');
+    if (mainElement) {
+        mainHeight = mainElement.offsetHeight;
+        alert(`main.offsetHeight at DOMContentLoaded: ${mainOffsetHeight}px`);
+
+        // You can store this value or use it for initial calculations.
+        // For example, if you need to set initial heights for nested elements
+        // or calculate available space for content before any user interaction.
+    } else {
+        alert("Main element not found!");
+    }
     // 1. Initialize UI elements
     adjustMainHeight();
     initializeUIElements();
