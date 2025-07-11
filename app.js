@@ -44,6 +44,8 @@ const header = document.querySelector('header');
 const footer = document.querySelector('footer');
 const main = document.querySelector('main');
 
+let totalViewportHt;
+
 /*function showViewportDimensions() {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
@@ -71,7 +73,7 @@ function adjustMainHeight() {
 
 
 
-    if ((windowHeight - visualViewportHeight) > 0) {
+    if ((totalViewportHt - visualViewportHeight) > 0) {
         alert('update window ht');
     }
 }
@@ -85,6 +87,7 @@ window.addEventListener('load', adjustMainHeight);
 
 // Main application initialization
 document.addEventListener('DOMContentLoaded', async () => {
+    totalViewportHt = window.innerHeight;
     // 1. Initialize UI elements
     adjustMainHeight();
     initializeUIElements();
