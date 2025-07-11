@@ -72,7 +72,7 @@ function adjustMainHeight() {
     const visualViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
 
-    alert(totalViewportHt - visualViewportHeight)
+    alert(totalViewportHt - visualViewportHeight);
 }
 
 if (window.visualViewport) {
