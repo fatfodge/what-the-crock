@@ -40,9 +40,39 @@ import { getRestaurantsInBounds } from './firebaseService.js';
 
 let previousBottomPanelState = 'min';
 
+const header = document.querySelector('header');
+const footer = document.querySelector('footer');
+const main = document.querySelector('main');
+
+function adjustMainHeight() {
+    if (!main || !header || !footer) return;
+
+    const visualViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    const headerHeight = header.offsetHeight;
+    const footerHeight = footer.offsetHeight;
+
+    // Calculate height for main based on the current *visual* viewport
+    const calculatedMainHeight = visualViewportHeight - headerHeight - footerHeight;
+
+    // Apply it directly
+    main.style.height = `${calculatedMainHeight}px`;
+
+    // Also ensure main is correctly positioned from the top if needed
+    // If you are using flex-grow: 1, you don't need to set top/bottom on main
+    // If you were using position: fixed for main, you'd set its top/bottom
+}
+
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', adjustMainHeight);
+} else {
+    window.addEventListener('resize', adjustMainHeight); // Fallback for older browsers
+}
+window.addEventListener('load', adjustMainHeight);
+
 // Main application initialization
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. Initialize UI elements
+    adjustMainHeight();
     initializeUIElements();
 
     // 2. Initialize Leaflet Map
