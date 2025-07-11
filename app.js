@@ -44,12 +44,35 @@ const header = document.querySelector('header');
 const footer = document.querySelector('footer');
 const main = document.querySelector('main');
 
+function showViewportDimensions() {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    // window.visualViewport is more accurate for the *visible* area when keyboard is open
+    // but not supported everywhere. Provide fallback.
+    const visualViewportWidth = window.visualViewport ? window.visualViewport.width : window.innerWidth;
+    const visualViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+
+    alert(
+        `Viewport Dimensions:\n` +
+        `window.innerWidth: ${windowWidth}px\n` +
+        `window.innerHeight: ${windowHeight}px\n\n` +
+        `visualViewport.width: ${visualViewportWidth}px\n` +
+        `visualViewport.height: ${visualViewportHeight}px\n` +
+        `(visualViewport is the *visible* area, accounting for keyboard)`
+    );
+}
+
 function adjustMainHeight() {
     if (!main || !header || !footer) return;
+
 
     const visualViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
     const headerHeight = header.offsetHeight;
     const footerHeight = footer.offsetHeight;
+
+    showViewportDimensions();
+
 
     // Calculate height for main based on the current *visual* viewport
     const calculatedMainHeight = visualViewportHeight - headerHeight - footerHeight;
