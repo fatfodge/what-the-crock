@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mainElement = document.querySelector('main');
     if (mainElement) {
         mainHeight = mainElement.offsetHeight;
-        alert(`main.offsetHeight at DOMContentLoaded: ${mainOffsetHeight}px`);
+        //alert(`main.offsetHeight at DOMContentLoaded: ${mainOffsetHeight}px`);
 
         // You can store this value or use it for initial calculations.
         // For example, if you need to set initial heights for nested elements
