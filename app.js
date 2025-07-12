@@ -108,9 +108,11 @@ window.addEventListener('load', adjustMainHeight);
 document.addEventListener('DOMContentLoaded', async () => {
     lockToPortrait();
     totalViewportHt = window.innerHeight;
-    const mainElement = document.querySelector('main');
-    if (mainElement) {
-        mainHeight = mainElement.offsetHeight;
+    if (main && header && footer) {
+        let headerHeight = header.offsetHeight;
+        let footerHeight = footer.offsetHeight;
+        mainHeight = totalViewportHt - headerHeight - footerHeight;
+        main.style.marginTop = `${headerHeight}px`;
         //alert(`main.offsetHeight at DOMContentLoaded: ${mainOffsetHeight}px`);
 
         // You can store this value or use it for initial calculations.
