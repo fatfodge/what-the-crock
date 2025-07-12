@@ -61,6 +61,8 @@ function windowResizeEvent() {
         mapContainer.style.top = `${headerHt}px`;
         footerContainer.style.top = `${VVH - footerHt}px`;
         bottomPanelContainer.style.top = `${VVH - bottomPanelHt}px`;
+
+        window.scrollTo(0, 0);
     }
     catch {
         console.log('window resize failed');
