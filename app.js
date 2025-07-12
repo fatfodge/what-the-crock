@@ -69,11 +69,17 @@ let mapHt;
 function adjustMainHeight() {
     if (!mapContainer || !header || !footer) return;
 
+    let windowcount = document.getElementById('window-change-count');
+    let count = parseInt(windowcount.innerHTML) + 1;
+    console.log(count);
+    windowcount.innerHTML = count.toString();
+
+
     let windowsize = document.getElementById('window-size');
     windowsize.innerHTML = '';
 
     const visualViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-    const visualDelta = visualViewportHeight - totalViewportHt;
+    const visualDelta = totalViewportHt - visualViewportHeight;
     const newMapHt = mapHt - visualDelta
 
     windowsize.innerHTML =
@@ -105,7 +111,8 @@ function lockToPortrait() {
         // Fallback or inform user
     }
 }
-window.addEventListener('load', adjustMainHeight);
+window.addEventListener('resize', adjustMainHeight);
+//window.addEventListener('load', adjustMainHeight);
 
 
 // Main application initialization
