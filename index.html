@@ -2,159 +2,37 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>What The Crock</title>
-
-    <link rel="manifest" href="manifest.json">
     <link rel="icon" href="icons/favicon.png" type="image/png">
-    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="WTCrock">
-    <title>What the Crock</title>
-
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
-    <!-- Your CSS -->
     <link rel="stylesheet" href="style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <script type="importmap">
-    {
-        "imports": {
-            "geofire-common": "https://cdn.jsdelivr.net/npm/geofire-common@6.0.0/dist/geofire-common/index.esm.js"
-        }
-    }
-    </script>
 </head>
 
 <body>
-
     <header>
         <h1>🥣 What the Crock</h1>
         <p>Find and rate the best French Onion Soup in Tampa Bay</p>
-        <p id ="window-change-count">0</p>
-        <p id ="window-size">window size</p>
     </header>
-
     <main>
-        <div id="map-container">
-            <div id="map"></div>
-            <button id="locate-btn" title="use current location">🎯</button>
-        </div>
-        <!--overlay-->
-        <div id="loginOverlay" class="overlay hidden"></div>
-        <!-- Bottom search panel -->
-        <div id="bottom-panel" class="bottom-panel sheet--min">
-            <div class="search-header">
+        <div id="map-container">map-container</div>
+        <div id="bottom-panel-container">
+            <div class="bottom-panel-header">
                 <div class="drag-handle"></div>
             </div>
-            <div id="search-sheet" class='search-sheet search-sheet--min'>
-                <div class="search-bar">
+            <div id="search-container">
+                <div id="search-bar">
                     <input id="address-input" type="text" placeholder="Search for a location">
                     <button id="profile-btn" title="open my profile view">?</button>
                     <button id="cancel-search-btn" title="cancel-search" style="display: none;">Cancel</button>
                 </div>
                 <ul id="results"></ul>
             </div>
-
-            <div id="restaurant-display" style="display:none;">
-                <button class="restaurant-closeBtn" type="button">Back</button>
-                <div id="selected-restaurant" style="display:none;">
-                </div>
-                <h3 id="reviewsHeader" style="display:none;">Reviews:</h3>
-                <ul id="restaurants-reviews"
-                    style="display:none; overflow-y: scroll; max-height: 200px; border: 1px solid #ccc; padding: 10px;">
-                </ul>
-            </div>
-
-            <div id="restaurants-in-view" style="display:none;">
-                <button class="restaurant-closeBtn" type="button">x</button>
-                <h3 id="allRestaurantsHeader" style="display:none;">Available Restaurants:</h3>
-                <ul id="all-visible-restaurants"
-                    style="display:none; overflow-y: scroll; max-height: 300px; border: 1px solid #eee; padding: 10px;">
-                </ul>
-            </div>
-
-            <!-- Displayed if found -->
-            <div id="restaurantDetails" style="display:none;">
-                <button class="restaurant-closeBtn">Back</button>
-                <h3 id="restName"></h3>
-                <p id="restAddress"></p>
-                <div id="restRatingForm"></div>
-            </div>
-
-            <!-- Autofill Form for new submissions -->
-            <form id="newRestaurantForm" style="display:none;">
-                <button class="restaurant-closeBtn" type="button">x</button>
-                <input type="text" id="newName" placeholder="Restaurant Name" required />
-                <input type="text" id="newAddress" placeholder="Street Address" required />
-                <input type="hidden" id="newLat" />
-                <input type="hidden" id="newLng" />
-                <span id="optional-container" style="display:none;">Optional</span>
-                <div id="star-rating" class="star-rating">
-                    <span data-value="1" class="star">&#9733;</span>
-                    <span data-value="2" class="star">&#9733;</span>
-                    <span data-value="3" class="star">&#9733;</span>
-                    <span data-value="4" class="star">&#9733;</span>
-                    <span data-value="5" class="star">&#9733;</span>
-                    <input type="hidden" id="ratingValue" name="rating" value="0">
-                </div>
-                <textarea id="optionalRatingNotes" placeholder="Leave a review (optional)"></textarea>
-                <button type="submit">Submit for Review</button>
-            </form>
         </div>
-        <!-- Profile panel-->
-        <div id="profile-sheet" class="profile-sheet profile-sheet--hidden">
-            <button id="closeLoginForm" class="close-btn" aria-label="Close">&times;</button>
-            <div id="login-form" class="login-form" style="display:none;">
-                <div id="loginAlert" class="alert">
-                    <span id="alertMessage">Message goes here</span>
-                </div>
-                <div class="form-row">
-                    <input type="email" id="emailInput" placeholder="Email" />
-                    <button id="signupBtn">Sign Up</button>
-                </div>
-
-                <div class="form-row">
-                    <input type="password" id="passwordInput" placeholder="Password" />
-                    <button id="forgotPasswordBtn">Forgot Password</button>
-                </div>
-
-                <div class="form-row">
-                    <button id="loginBtn">Log In</button>
-                </div>
-            </div>
-            <div id="activeUserFrom" style="display: none;">
-                <button id="lgoutBtn">Log Out</button>
-                <div id="adminPanelSheet" style="display:none;">
-                    <h3>v1.11</h3>
-                    <h3>Pending Submissions</h3>
-                    <div id="pendingSubmissionsList"></div>
-                </div>
-            </div>
-        </div>
+        <div id="user-container">user-container</div>
     </main>
     <footer>
         <p>&copy; 2025 What the Crock</p>
     </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 
-
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <script async
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQ17zqXPC0xDxCVid7l0eHGYCmIe-pMCQ&loading=async&libraries=places&loading=async"
-        defer></script>
-
-
-    <!-- Your JS -->
     <script type="module" src="app.js"></script>
-
-
 </body>
 
 </html>

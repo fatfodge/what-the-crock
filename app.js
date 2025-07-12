@@ -1,287 +1,68 @@
-// main.js (or app.js)
-
-import { auth } from './firebase.js';
-
-//import { initializeMap, centerMapOnUser, loadRestaurantPins, getMapInstance, setdisplayRestaurantDetailsCb } from './map.js';
-import { initializeMap, centerMapOnUser, getMapInstance, setdisplayRestaurantDetailsCb } from './map.js';
-
-import { initAutoComplete } from './autoComplete.js';
-import {
-    initializeUIElements,
-    setBottomPanelState,
-    setProfileSheetState,
-    displayRestaurantDetails,
-    autofillNewRestaurantForm,
-    showSearch,
-    setupStarRating,
-    showRestaurantsInView
-} from './ui.js';
-import {
-    setFirebaseUICallbacks,
-    setupAuthListener,
-    signUpUser,
-    loginUser,
-    logoutUser,
-    handleSuggestionSelection,
-    submitNewRestaurantOrReview,
-    loadPendingSubmissions,
-} from './firebaseService.js';
-
-// Import functions from ui.js
-import {
-    getCurrentPanelState, // You'll pass this to swipeHandler.js
-} from './ui.js';
-
-// Import initSwipeHandling from swipeHandler.js
-import { initSwipeHandling } from './swipeHandler.js';
-
-import { getMapBounds } from './map.js';
-import { getRestaurantsInBounds } from './firebaseService.js';
-
-let previousBottomPanelState = 'min';
-
-let header;
-let footer;
+let headerContainer;
+let footerContainer;
 let mapContainer;
-let bottomPanel; 
-
 let totalViewportHt;
-let mapHt;
+let fullMapHt;
+let bottomPanelContainer;
 
-function adjustMainHeight() {
-    if (!mapContainer || !header || !footer || !bottomPanel) return;
-
-    let windowcount = document.getElementById('window-change-count');
-    /*let count = parseInt(windowcount.innerHTML) + 1;
-    console.log(count);
-    windowcount.innerHTML = count.toString();*/
-
-
-    let windowsize = document.getElementById('window-size');
-    windowsize.innerHTML = '';
-
-    const visualViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-    const visualDelta = visualViewportHeight - totalViewportHt;
-    const newMapHt = mapHt + visualDelta
-
-    windowcount.innerHTML = visualDelta < 0 ? "keyboard open" : "keyboard closed";
-
-    windowsize.innerHTML =
-        `visualDelta: ${visualDelta}px</br>` +
-        `newMapHt: ${newMapHt}px`;
-    //alert(totalViewportHt - visualViewportHeight);
-    mapContainer.style.height = `${newMapHt}px`;
-    footer.style.bottom = `${visualViewportHeight}px`;
-    //bottomPanel.style.bottom = `${visualViewportHeight}px`;
-
-}
-
-
-
-function lockToPortrait() {
-    // Check if the Screen Orientation API is supported
-    if (screen.orientation && screen.orientation.lock) {
-        screen.orientation.lock('portrait')
-            .then(() => {
-                console.log('Screen orientation locked to portrait.');
-            })
-            .catch((error) => {
-                console.warn('Failed to lock screen orientation:', error);
-                // This typically fails if:
-                // 1. Not in fullscreen mode
-                // 2. Not triggered by a user gesture (e.g., button click)
-                // 3. Browser doesn't support it or user has restrictions
-            });
-    } else {
-        console.warn('Screen Orientation API not supported or lock method unavailable.');
-        // Fallback or inform user
-    }
-}
-if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', adjustMainHeight);
-    // On some platforms, scrolling the page can also cause the visual viewport to change slightly,
-    // so listening to 'scroll' on visualViewport can also be useful for related adjustments.
-    window.visualViewport.addEventListener('scroll', adjustMainHeight);
-} else {
-    // Fallback for less precise detection (will also fire on orientation changes, etc.)
-    window.addEventListener('resize', adjustMainHeight);
-}
-
-function initElementSizes() {
-    header = document.querySelector('header');
-    footer = document.querySelector('footer');
-    mapContainer = document.getElementById('map-container');
-    bottomPanel = document.getElementById('bottom-panel');
-    totalViewportHt = window.innerHeight;
-    if (mapContainer && header && footer) {
-        let headerHeight = header.offsetHeight;
-        let footerHeight = footer.offsetHeight;
-        mapHt = totalViewportHt - headerHeight - footerHeight;
-        mapContainer.style.top = `${headerHeight}px`;
-        //alert(`main.offsetHeight at DOMContentLoaded: ${mainOffsetHeight}px`);
-
-        // You can store this value or use it for initial calculations.
-        // For example, if you need to set initial heights for nested elements
-        // or calculate available space for content before any user interaction.
-    } else {
-        alert("Element Sizes not Initilized");
-    }
-}
-
-
-// Main application initialization
 document.addEventListener('DOMContentLoaded', async () => {
 
-    initializeUIElements();
-
-    // 2. Initialize Leaflet Map
-    const map = initializeMap('map', [27.964157, -82.452606], 11);
-    centerMapOnUser();
-    //loadRestaurantPins();
-    setdisplayRestaurantDetailsCb(displayRestaurantDetails);
-
-
-
-    // 3. Set up Firebase Auth listener and UI callbacks
-    // Pass the new displayRestaurantDetails function to the Firebase service
-    //setFirebaseUICallbacks(setProfileSheetState, loadRestaurantPins, displayRestaurantDetails);
-    setFirebaseUICallbacks(setProfileSheetState, displayRestaurantDetails, getMapBounds);
-
-    setupAuthListener();
-
-    // 4. Initialize Google Maps Autocomplete
-    await initAutoComplete(map, setBottomPanelState, (suggestion, autoFillOverride = false) => {
-        // When a suggestion is selected in autocomplete, call the service function
-        handleSuggestionSelection(suggestion, autofillNewRestaurantForm, autoFillOverride);
-    }, auth, showRestaurantsInView);
-
-    /*document.addEventListener('mapIdle', async () => {
-        console.log("Map idle (Leaflet). Fetching visible restaurants...");
-        const bounds = getMapBounds();
-        if (bounds) {
-            const restaurants = await getRestaurantsInBounds(bounds);
-            console.log("Found restaurants in bounds:", restaurants);
-            //displayRestaurantsOnMap(restaurants); // Pass to mapService to put markers on map
-        }
-    });*/
-
-    // 5. Set up UI Event Listeners
-    document.getElementById("locate-btn").addEventListener("click", () => {
-        centerMapOnUser();
-    });
-
-    const addressInput = document.getElementById('address-input');
-    //const mapContainer = document.getElementById('map-container');
-    const cancelSearchBtn = document.getElementById('cancel-search-btn');
-    const profileBtn = document.getElementById('profile-btn');
-    const closeLoginFormBtn = document.getElementById('closeLoginForm');
-    const loginOverlay = document.getElementById('loginOverlay');
-    const newRestaurantFormElement = document.getElementById('newRestaurantForm');
-
-    // 2. Get the bottom panel element.
-    // It's safe to get it here because initializeUIElements() has run.
-    const bottomPanelElement = document.getElementById('bottom-panel');
-    if (bottomPanelElement) {
-        initSwipeHandling(bottomPanelElement, setBottomPanelState, getCurrentPanelState);
-        //setBottomPanelState('max');
-    } else {
-        console.error("Error: The 'bottom-panel' element was not found in the DOM. Swipe handling cannot be initialized.");
-    }
-
-
-    // Select all buttons with the common class and attach the showSearch function
-    document.querySelectorAll('.restaurant-closeBtn').forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevent default button behavior (like form submission)
-            showSearch(); // Call showSearch from ui.js for ANY .restaurant-closeBtn
-        });
-    });
-
-    //if (addressInput) addressInput.addEventListener("click", () => setBottomPanelState("min"));
-    if (mapContainer) mapContainer.addEventListener("click", () => {
-        const currentPanel = document.getElementById('bottom-panel');
-        if (currentPanel && currentPanel.classList.contains('sheet--max')) {
-            setBottomPanelState("mid");
-        }
-    });
-    if (cancelSearchBtn) cancelSearchBtn.addEventListener("click", () => setBottomPanelState("mid"));
-
-    if (profileBtn) profileBtn.addEventListener("click", () => {
-        previousBottomPanelState = getCurrentPanelState();
-        console.log("previousBottomPanelState", previousBottomPanelState);
-        setBottomPanelState("min");
-        const user = auth.currentUser;
-        if (user && user.uid === '0r7MhhMXrwSu7IUAgia4zpTrop32') {
-            loadPendingSubmissions();
-            setProfileSheetState("max");
-        } else {
-            setProfileSheetState("min");
-        }
-    });
-
-    if (closeLoginFormBtn) closeLoginFormBtn.addEventListener('click', () => {
-        setProfileSheetState("hidden");
-        setBottomPanelState(previousBottomPanelState)
-    });
-    if (loginOverlay) loginOverlay.addEventListener('click', (e) => {
-        if (e.target === loginOverlay) {
-            setProfileSheetState("hidden");
-            setBottomPanelState(previousBottomPanelState);
-        }
-    });
-
-    // Firebase Auth Form Handlers
-    document.getElementById('signupBtn').addEventListener('click', () => {
-        const email = document.getElementById('emailInput').value;
-        const password = document.getElementById('passwordInput').value;
-        signUpUser(email, password);
-    });
-
-    document.getElementById('loginBtn').addEventListener('click', () => {
-        const email = document.getElementById('emailInput').value;
-        const password = document.getElementById('passwordInput').value;
-        loginUser(email, password);
-    });
-
-    document.getElementById('lgoutBtn').addEventListener("click", () => {
-        logoutUser();
-    });
-
-    // Removed the redundant restaurant-closeBtn loop as it's now handled specifically for #restaurant-display
-    // and showSearch handles all panel hiding/showing.
-
-    // Setup star rating
-    setupStarRating();
-
-    // Handle new restaurant form submission
-    if (newRestaurantFormElement) {
-        newRestaurantFormElement.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            // Pass the displayRestaurantDetails function for showing an existing restaurant after review
-            await submitNewRestaurantOrReview(newRestaurantFormElement, showSearch, displayRestaurantDetails);
-        });
-    }
-
-    lockToPortrait();
-
-    initElementSizes();
-
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => { // Use 'load' to ensure everything is ready
-            navigator.serviceWorker.register('/sw.js') // Path to your service worker file
-                .then((registration) => {
-                    console.log('Service Worker registered with scope:', registration.scope);
-                })
-                .catch((error) => {
-                    console.error('Service Worker registration failed:', error);
-                });
-        });
-    } else {
-        console.warn('Service Workers are not supported in this browser.');
-    }
-
-    // 1. Initialize UI elements
-    adjustMainHeight();
+    initElements();
+    initViewportResizeListener();
 
     console.log("Main app initialized.");
 });
+
+function initElements() {
+    try {
+        headerContainer = document.querySelector('header');
+        footerContainer = document.querySelector('footer');
+        mapContainer = document.getElementById('map-container');
+        bottomPanelContainer = document.getElementById('bottom-panel-container');
+        totalViewportHt = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        fullMapHt = totalViewportHt - headerContainer.offsetHeight - footerContainer.offsetHeight;
+    }
+    catch {
+        console.log('Elements Initialize Failed');
+    }
+}
+
+function initViewportResizeListener() {
+    try {
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', windowResizeEvent);
+            // On some platforms, scrolling the page can also cause the visual viewport to change slightly,
+            // so listening to 'scroll' on visualViewport can also be useful for related adjustments.
+            window.visualViewport.addEventListener('scroll', windowResizeEvent);
+        } else {
+            // Fallback for less precise detection (will also fire on orientation changes, etc.)
+            window.addEventListener('resize', windowResizeEvent);
+        }
+
+        windowResizeEvent();
+    }
+    catch {
+        console.log("window resize listener failed");
+    }
+}
+
+function windowResizeEvent() {
+    try {
+        const VVH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        const visualDelta = VVH - totalViewportHt;
+        const newMapHt = fullMapHt + visualDelta;
+        const headerHt = headerContainer.offsetHeight;
+        const footerHt = footerContainer.offsetHeight;
+        const bottomPanelHt = bottomPanelContainer.offsetHeight;
+
+        fullMapHt = totalViewportHt - headerHt - footerHt;
+        mapContainer.style.height = `${newMapHt}px`;
+
+        mapContainer.style.top = `${headerHt}px`;
+        footerContainer.style.top = `${VVH - footerHt}px`;
+        bottomPanelContainer.style.top = `${VVH - bottomPanelHt}px`;
+    }
+    catch {
+        console.log('window resize failed');
+    }
+}

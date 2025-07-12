@@ -1,0 +1,93 @@
+body{
+    margin: 0;
+}
+
+header {
+    position: fixed;
+    background-color: #dbdbdb;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+main {
+    background-color: #a4f6ce;
+    left: 0;
+    right: 0;
+}
+
+footer {
+    position: fixed;
+    background-color: #f46f6f;
+    left: 0;
+    right: 0;
+}
+
+#bottom-panel-container {
+    background-color: aquamarine;
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}
+
+#user-container {
+    display: none;
+}
+
+#map-container{
+    position: fixed;
+    background-color: aqua;
+    width: 100%;
+}
+
+.drag-handle {
+    width: 40px;
+    height: 5px;
+    background-color: #ccc;
+    border-radius: 5px;
+}
+
+.bottom-panel-header {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 15px 0;
+    position: relative;
+}
+
+#search-bar {
+    display: flex;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 20px;
+}
+
+#address-input {
+    flex: 1;
+    border-radius: 1rem;
+    padding: 10px 40px 10px 30px;
+    /* left padding for magnifying glass, right for button */
+    font-size: 16px;
+    box-sizing: border-box;
+    background-image: url('https://cdn-icons-png.flaticon.com/512/622/622669.png');
+    /* magnifying glass */
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 16px 16px;
+    margin-right: 10px;
+}
+
+#profile-btn {
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
