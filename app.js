@@ -62,7 +62,7 @@ function windowResizeEvent() {
         footerContainer.style.top = `${VVH - footerHt}px`;
         bottomPanelContainer.style.top = `${VVH - bottomPanelHt}px`;
 
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     catch {
         console.log('window resize failed');
