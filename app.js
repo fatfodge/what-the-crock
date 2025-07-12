@@ -40,12 +40,12 @@ import { getRestaurantsInBounds } from './firebaseService.js';
 
 let previousBottomPanelState = 'min';
 
-const header = document.querySelector('header');
-const footer = document.querySelector('footer');
-const main = document.querySelector('main');
+let header;
+let footer;
+let mapContainer;
 
 let totalViewportHt;
-let mainHeight;
+let mapHt;
 
 /*function showViewportDimensions() {
     const windowWidth = window.innerWidth;
@@ -67,21 +67,17 @@ let mainHeight;
 }*/
 
 function adjustMainHeight() {
-    if (!main || !header || !footer) return;
+    if (!mapContainer || !header || !footer) return;
 
     const visualViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-    const visualDelta =  visualViewportHeight - totalViewportHt;
-    const newMainHt = mainHeight - visualDelta
+    const visualDelta = visualViewportHeight - totalViewportHt;
+    const newMapHt = mapHt - visualDelta
     //alert(totalViewportHt - visualViewportHeight);
-    main.style.height = `${newMainHt}px`;
+    mapContainer.style.height = `${newMapHt}px`;
 
 }
 
-if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', adjustMainHeight);
-} else {
-    window.addEventListener('resize', adjustMainHeight); // Fallback for older browsers
-}
+
 
 function lockToPortrait() {
     // Check if the Screen Orientation API is supported
@@ -104,25 +100,10 @@ function lockToPortrait() {
 }
 window.addEventListener('load', adjustMainHeight);
 
+
 // Main application initialization
 document.addEventListener('DOMContentLoaded', async () => {
-    lockToPortrait();
-    totalViewportHt = window.innerHeight;
-    if (main && header && footer) {
-        let headerHeight = header.offsetHeight;
-        let footerHeight = footer.offsetHeight;
-        mainHeight = totalViewportHt - headerHeight - footerHeight;
-        main.style.marginTop = `${headerHeight}px`;
-        //alert(`main.offsetHeight at DOMContentLoaded: ${mainOffsetHeight}px`);
 
-        // You can store this value or use it for initial calculations.
-        // For example, if you need to set initial heights for nested elements
-        // or calculate available space for content before any user interaction.
-    } else {
-        alert("Main element not found!");
-    }
-    // 1. Initialize UI elements
-    adjustMainHeight();
     initializeUIElements();
 
     // 2. Initialize Leaflet Map
@@ -162,7 +143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     const addressInput = document.getElementById('address-input');
-    const mapContainer = document.getElementById('map-container');
+    //const mapContainer = document.getElementById('map-container');
     const cancelSearchBtn = document.getElementById('cancel-search-btn');
     const profileBtn = document.getElementById('profile-btn');
     const closeLoginFormBtn = document.getElementById('closeLoginForm');
@@ -252,6 +233,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             await submitNewRestaurantOrReview(newRestaurantFormElement, showSearch, displayRestaurantDetails);
         });
     }
+
+    lockToPortrait();
+    header = document.querySelector('header');
+    footer = document.querySelector('footer');
+    mapContainer = document.getElementById('map-container');
+    totalViewportHt = window.innerHeight;
+    if (mapContainer && header && footer) {
+        let headerHeight = header.offsetHeight;
+        let footerHeight = footer.offsetHeight;
+        mapHt = totalViewportHt - headerHeight - footerHeight;
+        mapContainer.style.top = `${headerHeight}px`;
+        //alert(`main.offsetHeight at DOMContentLoaded: ${mainOffsetHeight}px`);
+
+        // You can store this value or use it for initial calculations.
+        // For example, if you need to set initial heights for nested elements
+        // or calculate available space for content before any user interaction.
+    } else {
+        alert("Main element not found!");
+    }
+    // 1. Initialize UI elements
+    adjustMainHeight();
 
     console.log("Main app initialized.");
 });
