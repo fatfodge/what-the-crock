@@ -4,6 +4,7 @@ let mapContainer;
 let totalViewportHt;
 let fullMapHt;
 let bottomPanelContainer;
+let bodyContainer;
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -17,6 +18,7 @@ function initElements() {
     try {
         headerContainer = document.querySelector('header');
         footerContainer = document.querySelector('footer');
+        bodyContainer = document.querySelector('body');
         mapContainer = document.getElementById('map-container');
         bottomPanelContainer = document.getElementById('bottom-panel-container');
         totalViewportHt = window.visualViewport ? window.visualViewport.height : window.innerHeight;
@@ -57,12 +59,13 @@ function windowResizeEvent() {
 
         fullMapHt = totalViewportHt - headerHt - footerHt;
         mapContainer.style.height = `${newMapHt}px`;
+        bodyContainer.style.height = `${VVH}px`;
 
         mapContainer.style.top = `${headerHt}px`;
         footerContainer.style.top = `${VVH - footerHt}px`;
         bottomPanelContainer.style.top = `${VVH - bottomPanelHt}px`;
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        //window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     catch {
         console.log('window resize failed');
