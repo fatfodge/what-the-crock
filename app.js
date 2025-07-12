@@ -69,9 +69,16 @@ let mapHt;
 function adjustMainHeight() {
     if (!mapContainer || !header || !footer) return;
 
+    let windowsize = document.getElementById('window-size');
+    windowsize.innerHTML = '';
+
     const visualViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
     const visualDelta = visualViewportHeight - totalViewportHt;
     const newMapHt = mapHt - visualDelta
+
+    windowsize.innerHTML =
+        `visualDelta: ${visualDelta}px</br>` +
+        `newMapHt: ${newMapHt}px`;
     //alert(totalViewportHt - visualViewportHeight);
     mapContainer.style.height = `${newMapHt}px`;
 
@@ -169,7 +176,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    if (addressInput) addressInput.addEventListener("click", () => setBottomPanelState("max"));
+    if (addressInput) addressInput.addEventListener("click", () => setBottomPanelState("min"));
     if (mapContainer) mapContainer.addEventListener("click", () => {
         const currentPanel = document.getElementById('bottom-panel');
         if (currentPanel && currentPanel.classList.contains('sheet--max')) {
