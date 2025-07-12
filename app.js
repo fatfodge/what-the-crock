@@ -111,8 +111,15 @@ function lockToPortrait() {
         // Fallback or inform user
     }
 }
-window.addEventListener('resize', adjustMainHeight);
-//window.addEventListener('load', adjustMainHeight);
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', adjustMainHeight);
+    // On some platforms, scrolling the page can also cause the visual viewport to change slightly,
+    // so listening to 'scroll' on visualViewport can also be useful for related adjustments.
+    window.visualViewport.addEventListener('scroll', adjustMainHeight);
+} else {
+    // Fallback for less precise detection (will also fire on orientation changes, etc.)
+    window.addEventListener('resize', adjustMainHeight);
+}
 
 
 // Main application initialization
