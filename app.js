@@ -273,6 +273,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
         alert("Main element not found!");
     }
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => { // Use 'load' to ensure everything is ready
+            navigator.serviceWorker.register('/sw.js') // Path to your service worker file
+                .then((registration) => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch((error) => {
+                    console.error('Service Worker registration failed:', error);
+                });
+        });
+    } else {
+        console.warn('Service Workers are not supported in this browser.');
+    }
+
     // 1. Initialize UI elements
     adjustMainHeight();
 
