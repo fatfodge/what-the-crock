@@ -43,50 +43,36 @@ let previousBottomPanelState = 'min';
 let header;
 let footer;
 let mapContainer;
+let bottomPanel; 
 
 let totalViewportHt;
 let mapHt;
 
-/*function showViewportDimensions() {
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-
-    // window.visualViewport is more accurate for the *visible* area when keyboard is open
-    // but not supported everywhere. Provide fallback.
-    const visualViewportWidth = window.visualViewport ? window.visualViewport.width : window.innerWidth;
-    const visualViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-
-    alert(
-        `Viewport Dimensions:\n` +
-        `window.innerWidth: ${windowWidth}px\n` +
-        `window.innerHeight: ${windowHeight}px\n\n` +
-        `visualViewport.width: ${visualViewportWidth}px\n` +
-        `visualViewport.height: ${visualViewportHeight}px\n` +
-        `(visualViewport is the *visible* area, accounting for keyboard)`
-    );
-}*/
-
 function adjustMainHeight() {
-    if (!mapContainer || !header || !footer) return;
+    if (!mapContainer || !header || !footer || !bottomPanel) return;
 
     let windowcount = document.getElementById('window-change-count');
-    let count = parseInt(windowcount.innerHTML) + 1;
+    /*let count = parseInt(windowcount.innerHTML) + 1;
     console.log(count);
-    windowcount.innerHTML = count.toString();
+    windowcount.innerHTML = count.toString();*/
 
 
     let windowsize = document.getElementById('window-size');
     windowsize.innerHTML = '';
 
     const visualViewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-    const visualDelta = totalViewportHt - visualViewportHeight;
-    const newMapHt = mapHt - visualDelta
+    const visualDelta = visualViewportHeight - totalViewportHt;
+    const newMapHt = mapHt + visualDelta
+
+    windowcount.innerHTML = visualDelta < 0 ? "keyboard open" : "keyboard closed";
 
     windowsize.innerHTML =
         `visualDelta: ${visualDelta}px</br>` +
         `newMapHt: ${newMapHt}px`;
     //alert(totalViewportHt - visualViewportHeight);
     mapContainer.style.height = `${newMapHt}px`;
+    footer.style.bottom = `${visualViewportHeight}px`;
+    //bottomPanel.style.bottom = `${visualViewportHeight}px`;
 
 }
 
@@ -119,6 +105,27 @@ if (window.visualViewport) {
 } else {
     // Fallback for less precise detection (will also fire on orientation changes, etc.)
     window.addEventListener('resize', adjustMainHeight);
+}
+
+function initElementSizes() {
+    header = document.querySelector('header');
+    footer = document.querySelector('footer');
+    mapContainer = document.getElementById('map-container');
+    bottomPanel = document.getElementById('bottom-panel');
+    totalViewportHt = window.innerHeight;
+    if (mapContainer && header && footer) {
+        let headerHeight = header.offsetHeight;
+        let footerHeight = footer.offsetHeight;
+        mapHt = totalViewportHt - headerHeight - footerHeight;
+        mapContainer.style.top = `${headerHeight}px`;
+        //alert(`main.offsetHeight at DOMContentLoaded: ${mainOffsetHeight}px`);
+
+        // You can store this value or use it for initial calculations.
+        // For example, if you need to set initial heights for nested elements
+        // or calculate available space for content before any user interaction.
+    } else {
+        alert("Element Sizes not Initilized");
+    }
 }
 
 
@@ -176,7 +183,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const bottomPanelElement = document.getElementById('bottom-panel');
     if (bottomPanelElement) {
         initSwipeHandling(bottomPanelElement, setBottomPanelState, getCurrentPanelState);
-        setBottomPanelState('min');
+        //setBottomPanelState('max');
     } else {
         console.error("Error: The 'bottom-panel' element was not found in the DOM. Swipe handling cannot be initialized.");
     }
@@ -190,7 +197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    if (addressInput) addressInput.addEventListener("click", () => setBottomPanelState("min"));
+    //if (addressInput) addressInput.addEventListener("click", () => setBottomPanelState("min"));
     if (mapContainer) mapContainer.addEventListener("click", () => {
         const currentPanel = document.getElementById('bottom-panel');
         if (currentPanel && currentPanel.classList.contains('sheet--max')) {
@@ -256,23 +263,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     lockToPortrait();
-    header = document.querySelector('header');
-    footer = document.querySelector('footer');
-    mapContainer = document.getElementById('map-container');
-    totalViewportHt = window.innerHeight;
-    if (mapContainer && header && footer) {
-        let headerHeight = header.offsetHeight;
-        let footerHeight = footer.offsetHeight;
-        mapHt = totalViewportHt - headerHeight - footerHeight;
-        mapContainer.style.top = `${headerHeight}px`;
-        //alert(`main.offsetHeight at DOMContentLoaded: ${mainOffsetHeight}px`);
 
-        // You can store this value or use it for initial calculations.
-        // For example, if you need to set initial heights for nested elements
-        // or calculate available space for content before any user interaction.
-    } else {
-        alert("Main element not found!");
-    }
+    initElementSizes();
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => { // Use 'load' to ensure everything is ready
