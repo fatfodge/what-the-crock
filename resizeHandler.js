@@ -54,8 +54,8 @@ function windowResizeEvent() {
         bodyContainer.style.height = `${VVH}px`;
 
         mapContainer.style.top = `${headerHt}px`;
-        footerContainer.style.bottom = `0px`;
-        bottomPanelContainer.style.bottom = `0px`;
+        footerContainer.style.top = `${VVH - footerHt}px`;
+        bottomPanelContainer.style.top = `${VVH - bottomPanelHt}px`;
 
         window.scrollTo(0,0);
     }

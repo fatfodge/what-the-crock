@@ -1,5 +1,6 @@
 let bottomPanelElement;
 let initialPanelHeight;
+let initialPanelTop
 
 export const STATE_TRANSFORM_PERCENTAGES = {
     'max': 0,
@@ -14,15 +15,16 @@ export function initSwipeHandling() {
     hammerManager.get('pan').set({ direction: Hammer.DIRECTION_VERTICAL });
 
     hammerManager.on('panstart', (e) => {
-        console.log('panstart');
         bottomPanelElement.style.transition = 'none';
         initialPanelHeight = bottomPanelElement.offsetHeight;
+        initialPanelTop = bottomPanelElement.getBoundingClientRect().top;
     });
 
     hammerManager.on('pan', (e) => {
-        console.log('pan');
         let newPanelHeight = initialPanelHeight - e.deltaY;
+        let newPanelTop = initialPanelTop + e.deltaY;
         bottomPanelElement.style.height = `${newPanelHeight}px`;
+        bottomPanelElement.style.top = `${newPanelTop}px`;
     });
 
     /*hammerManager.on('panend', (e) => {
