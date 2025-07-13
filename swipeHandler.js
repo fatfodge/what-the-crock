@@ -28,7 +28,7 @@ export function initSwipeHandling() {
     hammerManager.on('panend', (e) => {
         bottomPanelElement.style.transition = 'height 2s ease-out, top 2s ease out';
         let fullPanelHeight = getFullViewportHeight();
-        let panEndPostitionY = bottomPanelContainer.getBoundingClientRect().top;
+        let panEndPostitionY = bottomPanelElement.getBoundingClientRect().top;
         let visualDelta = getVisualDelta(); // will be <= 0 
         const finalVelocityY = e.velocityY;
         const finalDeltaY = e.deltaY;
@@ -44,9 +44,13 @@ export function initSwipeHandling() {
         let newPanelTop;
         const maxToMidBoundary = (STATE_TRANSFORM_PX.max + STATE_TRANSFORM_PX.mid) / 2;
         const midToClosedBoundary = (STATE_TRANSFORM_PX.mid + STATE_TRANSFORM_PX.min) / 2;
+        console.log('panEndPostitionY',panEndPostitionY);
+        console.log('maxToMidBoundary',maxToMidBoundary);
+        console.log('midToClosedBoundary',midToClosedBoundary);
         //swipe up
         if (finalVelocityY < -0.3 || finalDeltaY < -swipeThresholdPixels) {
-            if (panEndPostitionY > midToClosedBoundary) {
+            console.log('swipe up');
+            if (panEndPostitionY < midToClosedBoundary) {
                 newPanelTop = STATE_TRANSFORM_PX.max;
             }
             else{
@@ -56,7 +60,8 @@ export function initSwipeHandling() {
         }
         //swipe down
         else if (finalVelocityY > 0.3 || finalDeltaY > swipeThresholdPixels) {
-            if (panEndPostitionY < maxToMidBoundary) {
+            console.log('swipe down');
+            if (panEndPostitionY > midToClosedBoundary) {
                 newPanelTop = STATE_TRANSFORM_PX.min;
             }
             else{
@@ -66,9 +71,9 @@ export function initSwipeHandling() {
         }
         //no significant change
         else {
-            if (panEndPostitionY >= maxToMidBoundary) {
+            if (panEndPostitionY <= maxToMidBoundary) {
                 newPanelTop = STATE_TRANSFORM_PX.max;
-            } else if (panEndPostitionY >= midToClosedBoundary) {
+            } else if (panEndPostitionY <= midToClosedBoundary) {
                 newPanelTop = STATE_TRANSFORM_PX.mid;
             } else {
                 newPanelTop = STATE_TRANSFORM_PX.min;
