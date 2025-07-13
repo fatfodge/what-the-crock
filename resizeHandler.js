@@ -28,6 +28,11 @@ export function initViewportResizeListener(window) {
     }
 }
 
+export function setCurrentBottomPanelHt(newHT){
+    currentBottomPanelHt = newHT;
+    console.log('set new panel ht');
+}
+
 function initElements() {
     try {
         headerContainer = document.querySelector('header');

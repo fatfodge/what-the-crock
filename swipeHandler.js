@@ -1,3 +1,5 @@
+import {setCurrentBottomPanelHt} from './resizeHandler.js';
+
 let bottomPanelElement;
 let initialPanelHeight;
 let initialPanelTop
@@ -26,6 +28,11 @@ export function initSwipeHandling() {
         bottomPanelElement.style.height = `${newPanelHeight}px`;
         bottomPanelElement.style.top = `${newPanelTop}px`;
     });
+
+    hammerManager.on('panend', (e) => {
+        let newPanelHeight = bottomPanelElement.offsetHeight;
+        setCurrentBottomPanelHt(newPanelHeight);
+    })
 
     /*hammerManager.on('panend', (e) => {
         const finalVelocityY = e.velocityY;
