@@ -6,6 +6,8 @@ let fullMapHt;
 let bottomPanelContainer;
 let bodyContainer;
 
+let currentBottomPanelHt;
+
 export function initViewportResizeListener(window) {
     try {
         if (window.visualViewport) {
@@ -34,6 +36,7 @@ function initElements() {
         bottomPanelContainer = document.getElementById('bottom-panel-container');
         totalViewportHt = window.visualViewport ? window.visualViewport.height : window.innerHeight;
         fullMapHt = totalViewportHt - headerContainer.offsetHeight - footerContainer.offsetHeight;
+        currentBottomPanelHt = bottomPanelContainer.offsetHeight();
     }
     catch {
         console.log('Elements Initialize Failed');
@@ -47,7 +50,8 @@ function windowResizeEvent() {
         const newMapHt = fullMapHt + visualDelta;
         const headerHt = headerContainer.offsetHeight;
         const footerHt = footerContainer.offsetHeight;
-        const bottomPanelHt = bottomPanelContainer.offsetHeight;
+
+        bottomPanelContainer.style.height = `${currentBottomPanelHt}px`;
 
         fullMapHt = totalViewportHt - headerHt - footerHt;
         mapContainer.style.height = `${newMapHt}px`;
@@ -55,7 +59,7 @@ function windowResizeEvent() {
 
         mapContainer.style.top = `${headerHt}px`;
         footerContainer.style.top = `${VVH - footerHt}px`;
-        bottomPanelContainer.style.top = `${VVH - bottomPanelHt}px`;
+        bottomPanelContainer.style.top = `${VVH - currentBottomPanelHt}px`;
 
         window.scrollTo(0,0);
     }
