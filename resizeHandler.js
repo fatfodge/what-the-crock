@@ -42,7 +42,7 @@ function initElements() {
         bottomPanelContainer = document.getElementById('bottom-panel-container');
         totalViewportHt = window.visualViewport ? window.visualViewport.height : window.innerHeight;
         fullMapHt = totalViewportHt - headerContainer.offsetHeight - footerContainer.offsetHeight;
-        currentBottomPanelHt = bottomPanelContainer.offsetHeight();
+        currentBottomPanelHt = bottomPanelContainer.offsetHeight;
         currentFooterHt = footerContainer.offsetHeight();
     }
     catch {
