@@ -1,17 +1,13 @@
-import {setCurrentBottomPanelHt} from './resizeHandler.js';
+import { updateCurrentBottomPanelHt, getFullViewportHeight, getVisualDelta, getBottomPanelContainerMin } from './resizeHandler.js';
 
 let bottomPanelElement;
 let initialPanelHeight;
-let initialPanelTop
-
-export const STATE_TRANSFORM_PERCENTAGES = {
-    'max': 0,
-    'mid': 40,
-    'min': 90
-};
+let initialPanelTop;
+let STATE_TRANSFORM_PX = {};
 const PAN_THRESHOLD_PERCENT = 0.15;
 
 export function initSwipeHandling() {
+    initStateTransforms();
     bottomPanelElement = document.getElementById('bottom-panel-container');
     const hammerManager = new Hammer(bottomPanelElement);
     hammerManager.get('pan').set({ direction: Hammer.DIRECTION_VERTICAL });
@@ -30,47 +26,67 @@ export function initSwipeHandling() {
     });
 
     hammerManager.on('panend', (e) => {
-        let newPanelHeight = bottomPanelElement.offsetHeight;
-        setCurrentBottomPanelHt(newPanelHeight);
-    })
-
-    /*hammerManager.on('panend', (e) => {
+        bottomPanelElement.style.transition = 'height 2s ease-out, top 2s ease out';
+        let fullPanelHeight = getFullViewportHeight();
+        let panEndPostitionY = fullPanelHeight - e.center.y;
+        let visualDelta = getVisualDelta(); // will be <= 0 
         const finalVelocityY = e.velocityY;
         const finalDeltaY = e.deltaY;
         const panelHeight = bottomPanelElement.offsetHeight;
-        if (panelHeight === 0) {
-            setPanelStateCallback(getCurrentPanelStateCallback());
+        const swipeThresholdPixels = panelHeight * PAN_THRESHOLD_PERCENT;
+        if (panelHeight < getBottomPanelContainerMin() && visualDelta === 0) {
+            let newPanelTop = fullPanelHeight - getBottomPanelContainerMin();
+            bottomPanelElement.style.height = `${STATE_TRANSFORM_PX.min}px`;
+            bottomPanelElement.style.top = `${newPanelTop}px`;
             return;
         }
-        bottomPanelElement.style.transition = 'transform 0.3s ease-out';
-        const swipeThresholdPixels = panelHeight * PAN_THRESHOLD_PERCENT;
-        let newState = getCurrentPanelStateCallback();
-        const currentOffsetPercent = parseFloat(bottomPanelElement.style.transform.match(/translateY\(([-]?\d*\.?\d+)\%\)/)?.[1] || STATE_TRANSFORM_PERCENTAGES[newState]);
-        const maxToMidBoundary = (STATE_TRANSFORM_PERCENTAGES.max + STATE_TRANSFORM_PERCENTAGES.mid) / 2;
-        const midToClosedBoundary = (STATE_TRANSFORM_PERCENTAGES.mid + STATE_TRANSFORM_PERCENTAGES.min) / 2;
+        let notifyPanelChange = false;
+        let newPanelTop;
+        const maxToMidBoundary = (STATE_TRANSFORM_PX.max + STATE_TRANSFORM_PX.mid) / 2;
+        const midToClosedBoundary = (STATE_TRANSFORM_PX.mid + STATE_TRANSFORM_PX.min) / 2;
+        //swipe up
         if (finalVelocityY < -0.3 || finalDeltaY < -swipeThresholdPixels) {
-            if (currentOffsetPercent < midToClosedBoundary) {
-                 if (currentOffsetPercent < maxToMidBoundary) {
-                    newState = 'max';
-                 }
+            if (panEndPostitionY > midToClosedBoundary) {
+                newPanelTop = STATE_TRANSFORM_PX.max;
             }
+            else{
+                newPanelTop = STATE_TRANSFORM_PX.mid;
+            }
+            notifyPanelChange = true;
         }
+        //swipe down
         else if (finalVelocityY > 0.3 || finalDeltaY > swipeThresholdPixels) {
-            if (currentOffsetPercent > maxToMidBoundary) {
-                if (currentOffsetPercent > midToClosedBoundary) {
-                    newState = 'min';
-                }
+            if (panEndPostitionY < maxToMidBoundary) {
+                newPanelTop = STATE_TRANSFORM_PX.min;
             }
+            else{
+                newPanelTop = STATE_TRANSFORM_PX.mid;
+            }
+            notifyPanelChange = true;
         }
+        //no significant change
         else {
-            if (currentOffsetPercent <= maxToMidBoundary) {
-                newState = 'max';
-            } else if (currentOffsetPercent <= midToClosedBoundary) {
-                newState = 'mid';
+            if (panEndPostitionY >= maxToMidBoundary) {
+                newPanelTop = STATE_TRANSFORM_PX.max;
+            } else if (panEndPostitionY >= midToClosedBoundary) {
+                newPanelTop = STATE_TRANSFORM_PX.mid;
             } else {
-                newState = 'min';
+                newPanelTop = STATE_TRANSFORM_PX.min;
             }
         }
-        setPanelStateCallback(newState);
-    });*/
+        bottomPanelElement.style.height = `${fullPanelHeight - newPanelTop + visualDelta}px`;
+        bottomPanelElement.style.top = `${newPanelTop}px`;
+
+
+        updateCurrentBottomPanelHt(notifyPanelChange);
+    });
+}
+
+function initStateTransforms() {
+    let fullPanelHeight = getFullViewportHeight();
+    let bottomPanelContainerMin = getBottomPanelContainerMin();
+
+    STATE_TRANSFORM_PX.min = fullPanelHeight - bottomPanelContainerMin;
+    STATE_TRANSFORM_PX.mid = fullPanelHeight * 0.4;
+    STATE_TRANSFORM_PX.max = fullPanelHeight * 0.1;
 }
