@@ -28,7 +28,7 @@ export function initSwipeHandling() {
     hammerManager.on('panend', (e) => {
         bottomPanelElement.style.transition = 'height 2s ease-out, top 2s ease out';
         let fullPanelHeight = getFullViewportHeight();
-        let panEndPostitionY = fullPanelHeight - e.center.y;
+        let panEndPostitionY = bottomPanelContainer.getBoundingClientRect().top;
         let visualDelta = getVisualDelta(); // will be <= 0 
         const finalVelocityY = e.velocityY;
         const finalDeltaY = e.deltaY;
