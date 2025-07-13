@@ -7,6 +7,7 @@ let bottomPanelContainer;
 let bodyContainer;
 
 let currentBottomPanelHt;
+let currentFooterHt;
 
 export function initViewportResizeListener(window) {
     try {
@@ -37,6 +38,7 @@ function initElements() {
         totalViewportHt = window.visualViewport ? window.visualViewport.height : window.innerHeight;
         fullMapHt = totalViewportHt - headerContainer.offsetHeight - footerContainer.offsetHeight;
         currentBottomPanelHt = bottomPanelContainer.offsetHeight();
+        currentFooterHt = footerContainer.offsetHeight();
     }
     catch {
         console.log('Elements Initialize Failed');
@@ -49,16 +51,15 @@ function windowResizeEvent() {
         const visualDelta = VVH - totalViewportHt;
         const newMapHt = fullMapHt + visualDelta;
         const headerHt = headerContainer.offsetHeight;
-        const footerHt = footerContainer.offsetHeight;
 
         bottomPanelContainer.style.height = `${currentBottomPanelHt}px`;
 
-        fullMapHt = totalViewportHt - headerHt - footerHt;
+        fullMapHt = totalViewportHt - headerHt - currentFooterHt;
         mapContainer.style.height = `${newMapHt}px`;
         bodyContainer.style.height = `${VVH}px`;
 
         mapContainer.style.top = `${headerHt}px`;
-        footerContainer.style.top = `${VVH - footerHt}px`;
+        footerContainer.style.top = `${VVH - currentFooterHt}px`;
         bottomPanelContainer.style.top = `${VVH - currentBottomPanelHt}px`;
 
         window.scrollTo(0,0);
