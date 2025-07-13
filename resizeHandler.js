@@ -99,7 +99,7 @@ function windowResizeEvent() {
             bottomPanelContainer.style.top = `${VVH - bottomPanelContainerMin}px`;
         }
         else{
-            bottomPanelContainer.style.height = `${currentBottomPanelHt + visualDelta}px`;
+            bottomPanelContainer.style.height = `${VVH - bottomPanelContainer.getBoundingClientRect().top}px`;
             currentBottomPanelHt = newBottomConatinerHt;
         }
 
