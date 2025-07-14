@@ -53,7 +53,9 @@ function SwipeFunctions() {
 
     hammerManager.on('pan', (e) => {
         try {
-            closeKeyboard();
+            if(closeKeyboard()){
+                initialPanelHeight = getFullViewportHeight() - initialPanelTop;
+            }
             let newPanelHeight = initialPanelHeight - e.deltaY;
             let newPanelTop = initialPanelTop + e.deltaY;
             bottomPanelElement.style.height = `${newPanelHeight}px`;

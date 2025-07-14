@@ -34,6 +34,10 @@ export function updateCurrentBottomPanelHt() {
     currentBottomPanelHt = bottomPanelContainer.offsetHeight;
 }
 
+/**
+ * closes keyboard
+ * @returns {boolean}
+ */
 export function closeKeyboard() {
     const activeElement = document.activeElement;
     const isInputLike = activeElement && (
@@ -44,6 +48,7 @@ export function closeKeyboard() {
     if (isInputLike) {
         activeElement.blur();
     }
+    return isInputLike;
 }
 
 /**
