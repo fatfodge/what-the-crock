@@ -29,15 +29,28 @@ export function initViewportResizeListener(window) {
     }
 }
 
-export function updateCurrentBottomPanelHt(panelChange = false){
+
+export function updateCurrentBottomPanelHt() {
     currentBottomPanelHt = bottomPanelContainer.offsetHeight;
+}
+
+export function closeKeyboard() {
+    const activeElement = document.activeElement;
+    const isInputLike = activeElement && (
+        activeElement.tagName === 'INPUT' ||
+        activeElement.tagName === 'TEXTAREA' ||
+        activeElement.hasAttribute('contenteditable') && activeElement.isContentEditable
+    );
+    if (isInputLike) {
+        activeElement.blur();
+    }
 }
 
 /**
  * Returns the full viewport Ht
  * @returns {number}
  */
-export function getFullViewportHeight(){
+export function getFullViewportHeight() {
     return fullViewportHt;
 }
 
@@ -45,7 +58,7 @@ export function getFullViewportHeight(){
  * Returns the visual delta
  * @returns {number}
  */
-export function getVisualDelta(){
+export function getVisualDelta() {
     return visualDelta;
 }
 
@@ -53,7 +66,7 @@ export function getVisualDelta(){
  * Returns the min value for bottom panel container
  * @returns {number}
  */
-export function getBottomPanelContainerMin(){
+export function getBottomPanelContainerMin() {
     return bottomPanelContainerMin;
 }
 
@@ -94,18 +107,18 @@ function windowResizeEvent() {
 
         let newBottomConatinerHt = fullViewportHt + visualDelta - bottomPanelContainer.getBoundingClientRect().top;
 
-        if(newBottomConatinerHt < bottomPanelContainerMin || bottomPanelContainer.offsetHeight === bottomPanelContainerMin){
+        if (newBottomConatinerHt < bottomPanelContainerMin || bottomPanelContainer.offsetHeight === bottomPanelContainerMin) {
             bottomPanelContainer.style.height = `${bottomPanelContainerMin}px`;
             bottomPanelContainer.style.top = `${VVH - bottomPanelContainerMin}px`;
         }
-        else{
+        else {
             bottomPanelContainer.style.height = `${VVH - bottomPanelContainer.getBoundingClientRect().top}px`;
             currentBottomPanelHt = newBottomConatinerHt;
         }
 
         updateCurrentBottomPanelHt();
 
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
     }
     catch {
         console.log('window resize failed');
