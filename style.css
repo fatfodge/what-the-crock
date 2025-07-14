@@ -97,12 +97,11 @@ footer {
 
 #profile-container{
     position: fixed;
-    max-height: 0px;
-    transition: max-height 0.5s ease-in-out;
+    transition: top 0.5s ease-in-out;
     overflow: hidden;
     left: 0;
     right: 0;
-    bottom: 0;
+    top: 100dvh;
     z-index: 2000;
     background: #fff;
     border-top-left-radius: 1rem;
@@ -110,12 +109,7 @@ footer {
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
 }
 
-#profile-container.expanded{
-    max-height: 100dvh;
-}
-
 .login-form {
-    
     margin: 20px;
     background-color: #fff;
     font-family: sans-serif;

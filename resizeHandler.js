@@ -1,3 +1,5 @@
+import { profileInFrame } from './ui.js';
+
 let headerContainer;
 let footerContainer;
 let mapContainer;
@@ -9,6 +11,7 @@ let currentBottomPanelHt;
 let currentFooterHt;
 let visualDelta;
 let bottomPanelContainerMin;
+let profileContainer;
 
 export function initViewportResizeListener(window) {
     try {
@@ -77,6 +80,7 @@ export function getBottomPanelContainerMin() {
 
 function initElements() {
     try {
+        profileContainer = document.getElementById('profile-container');
         headerContainer = document.querySelector('header');
         footerContainer = document.querySelector('footer');
         bodyContainer = document.querySelector('body');
@@ -109,6 +113,8 @@ function windowResizeEvent() {
         mapContainer.style.top = `${headerHt}px`;
         footerContainer.style.top = `${VVH - currentFooterHt}px`;
         //bottomPanelContainer.style.top = `${VVH - currentBottomPanelHt}px`;
+
+        if (profileInFrame) {profileContainer.style.top = `${VVH - profileContainer.offsetHeight}px`;}
 
         let newBottomConatinerHt = fullViewportHt + visualDelta - bottomPanelContainer.getBoundingClientRect().top;
 
