@@ -95,3 +95,81 @@ footer {
     justify-content: center;
 }
 
+#profile-container{
+    position: fixed;
+    max-height: 0px;
+    transition: max-height 0.5s ease-in-out;
+    overflow: hidden;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2000;
+    background: #fff;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+}
+
+#profile-container.expanded{
+    max-height: 100dvh;
+}
+
+.login-form {
+    
+    margin: 20px;
+    background-color: #fff;
+    font-family: sans-serif;
+}
+
+.login-form p {
+    text-align: center;
+    margin-bottom: 16px;
+    font-weight: bold;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.form-row input {
+    flex: 1;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.form-row button {
+    padding: 10px 14px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+#forgotPasswordBtn {
+    background-color: transparent;
+    color: #007bff;
+    text-decoration: underline;
+    padding: 0;
+    font-size: 13px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+}

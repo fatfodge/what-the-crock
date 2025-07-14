@@ -15,7 +15,7 @@
 
 <body>
     <header>
-        <h1>🥣 What the Crock V1.6</h1>
+        <h1>🥣 What the Crock V1.7.1</h1>
         <p>Find and rate the best French Onion Soup in Tampa Bay</p>
     </header>
     <main>
@@ -33,7 +33,33 @@
                 <ul id="search-results"></ul>
             </div>
         </div>
-        <div id="user-container">user-container</div>
+        <div id="profile-container">            
+            <button id="close-profile-container" class="close-btn" aria-label="Close">&times;</button>
+            <div id="login-form" class="login-form">
+                <div id="loginAlert" class="alert">
+                    <span id="alertMessage">Message goes here</span>
+                </div>
+                <div class="form-row">
+                    <input type="email" id="emailInput" placeholder="Email" />
+                    <button id="signupBtn">Sign Up</button>
+                </div>
+
+                <div class="form-row">
+                    <input type="password" id="passwordInput" placeholder="Password" />
+                    <button id="forgotPasswordBtn">Forgot Password</button>
+                </div>
+
+                <div class="form-row">
+                    <button id="loginBtn">Log In</button>
+                </div>
+            </div>
+            <div id="activeUserFrom">
+                <button id="lgoutBtn">Log Out</button>
+                <div id="adminPanelSheet" style="display:none;">
+                    <h3>Pending Submissions</h3>
+                    <div id="pendingSubmissionsList"></div>
+                </div>
+            </div></div>
     </main>
     <footer>
         <p>&copy; 2025 What the Crock</p>
