@@ -58,10 +58,10 @@ export function updateProfileDisplay(){
 function toggleProfileContainer() {
     updateProfileDisplay();
     if (!profileOpen) {
+        closeKeyboard();
         profileOpen = true;
         profileContainer.style.transition = 'top 0.5s ease-in-out';
         setBottomPanelState('min');
-        closeKeyboard();
     } else { 
         profileOpen = false; 
         setBottomPanelState(getPrevPanelState() ? getPrevPanelState() : getPanelState());

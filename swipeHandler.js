@@ -12,10 +12,19 @@ let prevPanelState;
 
 /**
  * returns current panel state
- * @returns {String}
+ * @returns {string}
  */
 export function getPanelState() {
     return panelState;
+}
+
+/**
+ * get transform from state
+ * @param {string} req_state 
+ * @returns {number}
+ */
+export function getStateTransform(req_state){
+    return STATE_TRANSFORM_PX[req_state];
 }
 
 export function getPrevPanelState() {
@@ -87,7 +96,7 @@ function SwipeFunctions() {
         try {
             const VVH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
             const topOfBottomPanel = bottomPanelElement.getBoundingClientRect().top;
-            bottomPanelElement.style.transition = 'top 0.5s ease-in-out';
+            bottomPanelElement.style.transition = 'top 0.5s ease-out';
 
             //if part of bottom panel is below the viewable screen
             if (topOfBottomPanel > VVH - bottomPanelWrapper.offsetHeight) {

@@ -1,4 +1,5 @@
 import { profileOpen } from './ui.js';
+import { getPanelState, getStateTransform } from './swipeHandler.js';
 
 let headerContainer;
 let footerContainer;
@@ -115,14 +116,11 @@ function windowResizeEvent() {
             profileContainer.style.transition = 'none';
             profileContainer.style.top = `${VVH}px`;
         }
-        if (topOfBottomPanel >= VVH - bottomPanelWrapper.offsetHeight) {
-            let newPanelTop = VVH - bottomPanelWrapper.offsetHeight;
-            bottomPanelContainer.style.top = `${newPanelTop}px`;
+
+        let panelTopOffset = VVH - bottomPanelWrapper.offsetHeight;
+        if (getPanelState() === 'min' || getStateTransform(getPanelState()) > panelTopOffset || topOfBottomPanel > panelTopOffset) {   
+            bottomPanelContainer.style.top = `${panelTopOffset}px`;
         }
-        else{
-            console.log('verify panel is in min, mid, or max');
-        }
-        //bottomPanelContainer.style.top = `${VVH - bottomPanelWrapper.offsetHeight}px`;
         updateCurrentBottomPanelHt();
 
         window.scrollTo(0, 0);
