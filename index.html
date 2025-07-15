@@ -15,22 +15,24 @@
 
 <body>
     <header>
-        <h1>🥣 What the Crock V1.7.3</h1>
+        <h1>🥣 What the Crock V1.7.4</h1>
         <p>Find and rate the best French Onion Soup in Tampa Bay</p>
     </header>
     <main>
         <div id="map-container">map-container</div>
         <div id="bottom-panel-container">
-            <div class="bottom-panel-header">
-                <div class="drag-handle"></div>
-            </div>
-            <div id="search-container">
-                <div id="search-bar">
-                    <input id="address-input" type="text" placeholder="Search for a location">
-                    <button id="profile-btn" title="open my profile view">?</button>
-                    <button id="cancel-search-btn" title="cancel-search" style="display: none;">Cancel</button>
+            <div id="bottom-panel-wrapper">
+                <div class="bottom-panel-header">
+                    <div class="drag-handle"></div>
                 </div>
-                <ul id="search-results"></ul>
+                <div id="search-container">
+                    <div id="search-bar">
+                        <input id="address-input" type="text" placeholder="Search for a location">
+                        <button id="profile-btn" title="open my profile view">?</button>
+                        <button id="cancel-search-btn" title="cancel-search" style="display: none;">Cancel</button>
+                    </div>
+                    <ul id="search-results"></ul>
+                </div>
             </div>
         </div>
         <div id="profile-container">

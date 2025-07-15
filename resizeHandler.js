@@ -6,6 +6,7 @@ let mapContainer;
 let fullViewportHt;
 let fullMapHt;
 let bottomPanelContainer;
+let bottomPanelWrapper;
 let bodyContainer;
 let currentBottomPanelHt;
 let currentFooterHt;
@@ -88,12 +89,15 @@ function initElements() {
         bodyContainer = document.querySelector('body');
         mapContainer = document.getElementById('map-container');
         bottomPanelContainer = document.getElementById('bottom-panel-container');
-        bottomPanelContainerMin = bottomPanelContainer.offsetHeight;
+        bottomPanelWrapper = document.getElementById('bottom-panel-wrapper');
+        bottomPanelContainerMin = bottomPanelWrapper.offsetHeight;
         fullViewportHt = window.visualViewport ? window.visualViewport.height : window.innerHeight;
         fullMapHt = fullViewportHt - headerContainer.offsetHeight - footerContainer.offsetHeight;
         updateCurrentBottomPanelHt();
 
         currentFooterHt = footerContainer.offsetHeight;
+
+        bottomPanelContainer.style.top = `${fullViewportHt - bottomPanelWrapper.offsetHeight}px`;
     }
     catch {
         console.log('Elements Initialize Failed');
@@ -103,32 +107,22 @@ function initElements() {
 function windowResizeEvent() {
     try {
         const VVH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        const topOfBottomPanel = bottomPanelContainer.getBoundingClientRect().top;
         visualDelta = VVH - fullViewportHt;
-        const newMapHt = fullMapHt + visualDelta;
-        const headerHt = headerContainer.offsetHeight;
 
-
-        fullMapHt = fullViewportHt - headerHt - currentFooterHt;
-        mapContainer.style.height = `${newMapHt}px`;
-        bodyContainer.style.height = `${VVH}px`;
-
-        mapContainer.style.top = `${headerHt}px`;
-        footerContainer.style.top = `${VVH - currentFooterHt}px`;
-        //bottomPanelContainer.style.top = `${VVH - currentBottomPanelHt}px`;
-
-        if (profileOpen) {profileContainer.style.top = `${VVH - profileWrapper.offsetHeight}px`;}
-
-        let newBottomConatinerHt = fullViewportHt + visualDelta - bottomPanelContainer.getBoundingClientRect().top;
-
-        if (newBottomConatinerHt < bottomPanelContainerMin || bottomPanelContainer.offsetHeight === bottomPanelContainerMin) {
-            bottomPanelContainer.style.height = `${bottomPanelContainerMin}px`;
-            bottomPanelContainer.style.top = `${VVH - bottomPanelContainerMin}px`;
-        }
+        if (profileOpen) { profileContainer.style.top = `${VVH - profileWrapper.offsetHeight}px`; }
         else {
-            bottomPanelContainer.style.height = `${VVH - bottomPanelContainer.getBoundingClientRect().top}px`;
-            currentBottomPanelHt = newBottomConatinerHt;
+            profileContainer.style.transition = 'none';
+            profileContainer.style.top = `${VVH}px`;
         }
-
+        if (topOfBottomPanel >= VVH - bottomPanelWrapper.offsetHeight) {
+            let newPanelTop = VVH - bottomPanelWrapper.offsetHeight;
+            bottomPanelContainer.style.top = `${newPanelTop}px`;
+        }
+        else{
+            console.log('verify panel is in min, mid, or max');
+        }
+        //bottomPanelContainer.style.top = `${VVH - bottomPanelWrapper.offsetHeight}px`;
         updateCurrentBottomPanelHt();
 
         window.scrollTo(0, 0);

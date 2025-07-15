@@ -28,11 +28,19 @@ footer {
 
 #bottom-panel-container {
     background-color: aquamarine;
+    transition: top 0.5s ease-in-out;
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
     z-index: 100;
+}
+
+#bottom-panel-wrapper {
+    background-color: orange; /* Just for debugging: see its size */
+    margin: 0; /* Ensure no external margin */
+    padding: 0; /* Ensure no internal padding that makes it bigger than its children */
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 #user-container {
@@ -98,7 +106,7 @@ footer {
 
 #profile-container{
     position: fixed;
-    transition: top 0.5s ease-in-out;
+    transition: none;
     overflow: hidden;
     left: 0;
     right: 0;

@@ -1,5 +1,5 @@
-import { setBottomPanelState } from "./swipeHandler.js";
-import { getFullViewportHeight, closeKeyboard } from "./resizeHandler.js";
+import { setBottomPanelState, getPanelState, getPrevPanelState } from "./swipeHandler.js";
+import { getVisualDelta, getFullViewportHeight, closeKeyboard } from "./resizeHandler.js";
 import { signUpUser, logoutUser, loginUser } from "./firebaseService.js";
 import { auth } from './firebase.js';
 
@@ -28,21 +28,21 @@ export function initUI() {
     } catch { console.log("init UI failed"); };
 }
 
-export function updateProfileTop(){
+export function updateProfileContainerTop(){
     let profileWrapper = document.getElementById('profile-wrapper');
     if(profileOpen){
-        profileContainer.style.top = `${getFullViewportHeight() - profileWrapper.offsetHeight}px`;
+        profileContainer.style.top = `${getFullViewportHeight() + getVisualDelta() - profileWrapper.offsetHeight}px`;
     }
     else{
-        profileContainer.style.top = `${getFullViewportHeight()}px`;
+        profileContainer.style.top = `${getFullViewportHeight() + getVisualDelta()}px`;
     }
 }
 
-function toggleProfileContainer() {
-    let loginForm = document.getElementById('login-form');
+export function updateProfileDisplay(){
     let activeUserForm = document.getElementById('activeUserFrom');
     let adminPanel = document.getElementById('adminPanelSheet');
     let loggedIn = auth.currentUser;
+    let loginForm = document.getElementById('login-form');
     if (loggedIn) {
         loginForm.style.display = "none";
         activeUserForm.style.display = "block";
@@ -53,14 +53,20 @@ function toggleProfileContainer() {
         activeUserForm.style.display = "none";
         adminPanel.style.display = "none";
     }
+}
+
+function toggleProfileContainer() {
+    updateProfileDisplay();
     if (!profileOpen) {
         profileOpen = true;
+        profileContainer.style.transition = 'top 0.5s ease-in-out';
         setBottomPanelState('min');
         closeKeyboard();
-    } else {
-        profileOpen = false;
+    } else { 
+        profileOpen = false; 
+        setBottomPanelState(getPrevPanelState() ? getPrevPanelState() : getPanelState());
     }
-    updateProfileTop();
+    updateProfileContainerTop();
 }
 
 function updateProfileContainer() {
