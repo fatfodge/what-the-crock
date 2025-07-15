@@ -124,10 +124,10 @@ function windowResizeEvent() {
 
         const panelTopOffset = VVH - bottomPanelWrapper.offsetHeight;
         const stateTransform = getStateTransform(getPanelState())
-        if (getPanelState() === 'min' || stateTransform > panelTopOffset || topOfBottomPanel > panelTopOffset) {   
-            bottomPanelContainer.style.top = `${panelTopOffset}px`;
-        } else if (stateTransform < panelTopOffset){
+        if (stateTransform < panelTopOffset){
             bottomPanelContainer.style.top = `${stateTransform}px`;
+        } else if (getPanelState() === 'min' || stateTransform > panelTopOffset || topOfBottomPanel > panelTopOffset) {   
+            bottomPanelContainer.style.top = `${panelTopOffset}px`;
         }
         updateCurrentBottomPanelHt();
 
