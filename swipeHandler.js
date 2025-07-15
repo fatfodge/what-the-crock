@@ -42,11 +42,13 @@ export function initSwipeHandling() {
 }
 
 /**
- * set bottom panel state
- * @param {String} state 
+ * 
+ * @param {string} state 
+ * @param {boolean} updateState 
+ * @returns 
  */
 
-export function setBottomPanelState(state) {
+export function setBottomPanelState(state, updateState = false) {
     if (!(state in STATE_TRANSFORM_PX)) {
         console.log("not in bottom panel state keys");
         return;
@@ -62,7 +64,7 @@ export function setBottomPanelState(state) {
             bottomPanelElement.style.top = `${newPanelTop}px`;
             updateCurrentBottomPanelHt();
         }
-        if (state != panelState) {
+        if (updateState || state != panelState) {
             prevPanelState = panelState;
             panelState = state;
         }

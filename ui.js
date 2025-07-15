@@ -61,7 +61,7 @@ function toggleProfileContainer() {
         closeKeyboard();
         profileOpen = true;
         profileContainer.style.transition = 'top 0.5s ease-in-out';
-        setBottomPanelState('min');
+        setBottomPanelState('min', true);
     } else { 
         profileOpen = false; 
         setBottomPanelState(getPrevPanelState() ? getPrevPanelState() : getPanelState());
