@@ -99,6 +99,7 @@ function initElements() {
         currentFooterHt = footerContainer.offsetHeight;
 
         bottomPanelContainer.style.top = `${fullViewportHt - bottomPanelWrapper.offsetHeight}px`;
+
     }
     catch {
         console.log('Elements Initialize Failed');
@@ -117,9 +118,16 @@ function windowResizeEvent() {
             profileContainer.style.top = `${VVH}px`;
         }
 
-        let panelTopOffset = VVH - bottomPanelWrapper.offsetHeight;
-        if (getPanelState() === 'min' || getStateTransform(getPanelState()) > panelTopOffset || topOfBottomPanel > panelTopOffset) {   
+
+        mapContainer.style.top = `${headerContainer.offsetHeight}px`;
+        mapContainer.style.bottom = `${footerContainer.offsetHeight}px`;
+
+        const panelTopOffset = VVH - bottomPanelWrapper.offsetHeight;
+        const stateTransform = getStateTransform(getPanelState())
+        if (getPanelState() === 'min' || stateTransform > panelTopOffset || topOfBottomPanel > panelTopOffset) {   
             bottomPanelContainer.style.top = `${panelTopOffset}px`;
+        } else if (stateTransform < panelTopOffset){
+            bottomPanelContainer.style.top = `${stateTransform}px`;
         }
         updateCurrentBottomPanelHt();
 

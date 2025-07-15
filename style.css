@@ -34,10 +34,13 @@ footer {
     right: 0;
     bottom: 0;
     z-index: 100;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
 }
 
 #bottom-panel-wrapper {
-    background-color: orange; /* Just for debugging: see its size */
+    /*background-color: orange; /* Just for debugging: see its size */
     margin: 0; /* Ensure no external margin */
     padding: 0; /* Ensure no internal padding that makes it bigger than its children */
     padding-bottom: env(safe-area-inset-bottom);
@@ -48,6 +51,8 @@ footer {
 }
 
 #map-container{
+    left: 0;
+    right: 0;
     position: fixed;
     background-color: aqua;
     width: 100%;
@@ -72,7 +77,7 @@ footer {
     display: flex;
     padding-left: 10px;
     padding-right: 10px;
-    padding-bottom: 20px;
+    padding-bottom: 30px;
 }
 
 #address-input {

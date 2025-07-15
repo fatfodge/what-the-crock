@@ -9,13 +9,15 @@ let profileContainer;
 
 export function initUI() {
     try {
-            profileContainer = document.getElementById('profile-container');
+        profileContainer = document.getElementById('profile-container');
         let loginBtn = document.getElementById('loginBtn');
         let logoutBtn = document.getElementById('lgoutBtn');
         let signUpBtn = document.getElementById('signupBtn');
         let addressInput = document.getElementById('address-input');
         let profileBtn = document.getElementById('profile-btn');
         let profileCloseBtn = document.getElementById('close-profile-container');
+        let emailInput = document.getElementById('emailInput');
+        let passwordInput = document.getElementById('passwordInput')
         profileOpen = false;
 
         addressInput.addEventListener('click', () => setBottomPanelState('max'));
@@ -24,21 +26,32 @@ export function initUI() {
         loginBtn.addEventListener('click', () => UI_loginUser());
         logoutBtn.addEventListener('click', () => UI_logoutUser());
         signUpBtn.addEventListener('click', () => UI_signUpUser());
+        emailInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === 'Tab') {
+                event.preventDefault();
+                passwordInput.focus();
+            }
+        });
+        passwordInput.addEventListener('keydown', (event) => {
+            if (event.key == 'Enter') {
+                UI_loginUser()
+            }
+        });
 
     } catch { console.log("init UI failed"); };
 }
 
-export function updateProfileContainerTop(){
+export function updateProfileContainerTop() {
     let profileWrapper = document.getElementById('profile-wrapper');
-    if(profileOpen){
+    if (profileOpen) {
         profileContainer.style.top = `${getFullViewportHeight() + getVisualDelta() - profileWrapper.offsetHeight}px`;
     }
-    else{
+    else {
         profileContainer.style.top = `${getFullViewportHeight() + getVisualDelta()}px`;
     }
 }
 
-export function updateProfileDisplay(){
+export function updateProfileDisplay() {
     let activeUserForm = document.getElementById('activeUserFrom');
     let adminPanel = document.getElementById('adminPanelSheet');
     let loggedIn = auth.currentUser;
@@ -47,23 +60,25 @@ export function updateProfileDisplay(){
         loginForm.style.display = "none";
         activeUserForm.style.display = "block";
         adminPanel.style.display = "none";
+        closeKeyboard();
     }
     else {
         loginForm.style.display = "block";
         activeUserForm.style.display = "none";
         adminPanel.style.display = "none";
+        document.getElementById('emailInput').focus();
     }
 }
 
 function toggleProfileContainer() {
     updateProfileDisplay();
     if (!profileOpen) {
-        closeKeyboard();
+        //closeKeyboard();
         profileOpen = true;
         profileContainer.style.transition = 'top 0.5s ease-in-out';
         setBottomPanelState('min', true);
-    } else { 
-        profileOpen = false; 
+    } else {
+        profileOpen = false;
         setBottomPanelState(getPrevPanelState() ? getPrevPanelState() : getPanelState());
     }
     updateProfileContainerTop();
