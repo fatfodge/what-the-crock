@@ -83,6 +83,7 @@ footer {
 }
 
 #profile-btn {
+    padding: 0;
     background: white;
     border: none;
     border-radius: 50%;
@@ -101,7 +102,7 @@ footer {
     overflow: hidden;
     left: 0;
     right: 0;
-    top: 100dvh;
+    bottom: 0;
     z-index: 2000;
     background: #fff;
     border-top-left-radius: 1rem;
@@ -109,8 +110,13 @@ footer {
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
 }
 
+#profile-wrapper{
+    margin: 0;
+    padding: 20px;
+}
+
 .login-form {
-    margin: 20px;
+    margin: 0px;
     background-color: #fff;
     font-family: sans-serif;
 }
