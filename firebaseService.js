@@ -1,11 +1,25 @@
 import { db, auth } from './firebase.js';
-import { onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js';
+import {sendPasswordResetEmail, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut} from 'https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js';
 import {updateProfileContainerTop, updateProfileDisplay} from './ui.js';
 
 export function initFirebaseService(){
     try{
     onAuthStateChanged(auth, (user) => authChanged(auth, user));
     } catch {console.log('firebase service not initilized');}
+}
+
+/**
+ * handles password reset
+ * @param {string} email 
+ */
+export async function passwordReset(email){
+    if (!email){alert('Please enter your email address.', 'error');}
+    else{
+        try{
+            await sendPasswordResetEmail(auth, email);
+            alert('Password reset email sent! Please check your inbox (and span folder).','success');
+        } catch { alert('Error submitting password reset'); }
+    }
 }
 
 

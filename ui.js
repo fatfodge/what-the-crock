@@ -1,6 +1,6 @@
 import { setBottomPanelState, getPanelState, getPrevPanelState } from "./swipeHandler.js";
 import { getVisualDelta, getFullViewportHeight, closeKeyboard } from "./resizeHandler.js";
-import { signUpUser, logoutUser, loginUser } from "./firebaseService.js";
+import { passwordReset, signUpUser, logoutUser, loginUser } from "./firebaseService.js";
 import { auth } from './firebase.js';
 
 export let profileOpen;
@@ -18,6 +18,7 @@ export function initUI() {
         let profileCloseBtn = document.getElementById('close-profile-container');
         let emailInput = document.getElementById('emailInput');
         let passwordInput = document.getElementById('passwordInput')
+        let passwordReset = document.getElementById('forgotPasswordBtn');
         profileOpen = false;
 
         addressInput.addEventListener('click', () => setBottomPanelState('max'));
@@ -35,8 +36,11 @@ export function initUI() {
         passwordInput.addEventListener('keydown', (event) => {
             if (event.key == 'Enter') {
                 UI_loginUser()
+                document.getElementById('login-form').requestFullscreen();
+                passwordInput.blur();
             }
         });
+        passwordReset.addEventListener('click', () => UI_resetPasswored());
 
     } catch { console.log("init UI failed"); };
 }
@@ -78,6 +82,7 @@ function toggleProfileContainer() {
         profileContainer.style.transition = 'top 0.5s ease-in-out';
         setBottomPanelState('min', true);
     } else {
+        closeKeyboard();
         profileOpen = false;
         setBottomPanelState(getPrevPanelState() ? getPrevPanelState() : getPanelState());
     }
@@ -89,6 +94,15 @@ function updateProfileContainer() {
     profileOpen = true;
     setBottomPanelState('min');
     closeKeyboard();
+}
+
+function UI_resetPasswored(){
+    const email = document.getElementById('emailInput').value;
+    if (!email){
+        alert('Please enter your email address.', 'error');
+        email.focus();
+    }
+    passwordReset(email);
 }
 
 function UI_loginUser() {
