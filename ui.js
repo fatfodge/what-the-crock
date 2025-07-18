@@ -1,5 +1,5 @@
 import { setBottomPanelState, getPanelState, getPrevPanelState } from "./swipeHandler.js";
-import { getVisualDelta, getFullViewportHeight, closeKeyboard } from "./resizeHandler.js";
+import { getFullViewportHeight, closeKeyboard } from "./resizeHandler.js";
 import { passwordReset, signUpUser, logoutUser, loginUser } from "./firebaseService.js";
 import { auth } from './firebase.js';
 
@@ -10,23 +10,19 @@ let profileContainer;
 export function initUI() {
     try {
         profileContainer = document.getElementById('profile-container');
-        let loginBtn = document.getElementById('loginBtn');
-        let logoutBtn = document.getElementById('lgoutBtn');
-        let signUpBtn = document.getElementById('signupBtn');
         let addressInput = document.getElementById('address-input');
-        let profileBtn = document.getElementById('profile-btn');
-        let profileCloseBtn = document.getElementById('close-profile-container');
         let emailInput = document.getElementById('emailInput');
         let passwordInput = document.getElementById('passwordInput')
         let passwordReset = document.getElementById('forgotPasswordBtn');
         profileOpen = false;
 
         addressInput.addEventListener('click', () => setBottomPanelState('max'));
-        profileBtn.addEventListener('click', () => toggleProfileContainer());
-        profileCloseBtn.addEventListener('click', () => toggleProfileContainer());
-        loginBtn.addEventListener('click', () => UI_loginUser());
-        logoutBtn.addEventListener('click', () => UI_logoutUser());
-        signUpBtn.addEventListener('click', () => UI_signUpUser());
+        addressInput.addEventListener('focus', () => addressInput.select());
+        document.getElementById('profile-btn').addEventListener('click', () => toggleProfileContainer());
+        document.getElementById('close-profile-container').addEventListener('click', () => toggleProfileContainer());
+        document.getElementById('loginBtn').addEventListener('click', () => UI_loginUser());
+        document.getElementById('lgoutBtn').addEventListener('click', () => UI_logoutUser());
+        document.getElementById('signupBtn').addEventListener('click', () => UI_signUpUser());
         emailInput.addEventListener('keydown', (event) => {
             if (event.key === 'Enter' || event.key === 'Tab') {
                 event.preventDefault();
@@ -35,24 +31,15 @@ export function initUI() {
         });
         passwordInput.addEventListener('keydown', (event) => {
             if (event.key == 'Enter') {
-                UI_loginUser()
-                document.getElementById('login-form').requestFullscreen();
+                UI_loginUser(emailInput.value,passwordInput.value);
+                emailInput.value = "";
+                passwordInput.value = "";
                 passwordInput.blur();
             }
         });
         passwordReset.addEventListener('click', () => UI_resetPasswored());
 
     } catch { console.log("init UI failed"); };
-}
-
-export function updateProfileContainerTop() {
-    let profileWrapper = document.getElementById('profile-wrapper');
-    if (profileOpen) {
-        profileContainer.style.top = `${getFullViewportHeight() + getVisualDelta() - profileWrapper.offsetHeight}px`;
-    }
-    else {
-        profileContainer.style.top = `${getFullViewportHeight() + getVisualDelta()}px`;
-    }
 }
 
 export function updateProfileDisplay() {
@@ -72,6 +59,14 @@ export function updateProfileDisplay() {
         adminPanel.style.display = "none";
         document.getElementById('emailInput').focus();
     }
+    const VVH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    let profileWrapper = document.getElementById('profile-wrapper');
+    if (profileOpen) {
+        profileContainer.style.top = `${VVH - profileWrapper.offsetHeight}px`;
+    }
+    else {
+        profileContainer.style.top = `${VVH}px`;
+    }
 }
 
 function toggleProfileContainer() {
@@ -86,7 +81,7 @@ function toggleProfileContainer() {
         profileOpen = false;
         setBottomPanelState(getPrevPanelState() ? getPrevPanelState() : getPanelState());
     }
-    updateProfileContainerTop();
+    updateProfileDisplay();
 }
 
 function updateProfileContainer() {
@@ -96,12 +91,10 @@ function updateProfileContainer() {
     closeKeyboard();
 }
 
-function UI_resetPasswored(){
-    const email = document.getElementById('emailInput').value;
-    if (!email){
-        alert('Please enter your email address.', 'error');
-        email.focus();
-    }
+function UI_resetPasswored() {
+    const emailElement = document.getElementById('emailInput');
+    const email = emailElement.value;
+    if (!email) {emailElement.focus();}
     passwordReset(email);
 }
 

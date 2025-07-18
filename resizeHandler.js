@@ -1,20 +1,8 @@
 import { profileOpen } from './ui.js';
 import { getPanelState, getStateTransform } from './swipeHandler.js';
 
-let headerContainer;
-let footerContainer;
-let mapContainer;
 let fullViewportHt;
-let fullMapHt;
-let bottomPanelContainer;
-let bottomPanelWrapper;
-let bodyContainer;
-let currentBottomPanelHt;
-let currentFooterHt;
-let visualDelta;
-let bottomPanelContainerMin;
-let profileContainer;
-let profileWrapper;
+let bottomPanelMinHt;
 
 export function initViewportResizeListener(window) {
     try {
@@ -35,9 +23,12 @@ export function initViewportResizeListener(window) {
     }
 }
 
-
-export function updateCurrentBottomPanelHt() {
-    currentBottomPanelHt = bottomPanelContainer.offsetHeight;
+/**
+ * return min ht for bottom panel
+ * @returns {number}
+ */
+export function getBottomPanelMinHt() {
+    return bottomPanelMinHt;
 }
 
 /**
@@ -65,40 +56,18 @@ export function getFullViewportHeight() {
     return fullViewportHt;
 }
 
-/**
- * Returns the visual delta
- * @returns {number}
- */
-export function getVisualDelta() {
-    return visualDelta;
-}
-
-/**
- * Returns the min value for bottom panel container
- * @returns {number}
- */
-export function getBottomPanelContainerMin() {
-    return bottomPanelContainerMin;
-}
-
 function initElements() {
     try {
-        profileContainer = document.getElementById('profile-container');
-        profileWrapper = document.getElementById('profile-wrapper');
-        headerContainer = document.querySelector('header');
-        footerContainer = document.querySelector('footer');
-        bodyContainer = document.querySelector('body');
-        mapContainer = document.getElementById('map-container');
-        bottomPanelContainer = document.getElementById('bottom-panel-container');
-        bottomPanelWrapper = document.getElementById('bottom-panel-wrapper');
-        bottomPanelContainerMin = bottomPanelWrapper.offsetHeight;
         fullViewportHt = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-        fullMapHt = fullViewportHt - headerContainer.offsetHeight - footerContainer.offsetHeight;
-        updateCurrentBottomPanelHt();
+        //let bottomPanelWrapperOffset = document.getElementById('bottom-panel-wrapper').offsetHeight;
 
-        currentFooterHt = footerContainer.offsetHeight;
 
-        bottomPanelContainer.style.top = `${fullViewportHt - bottomPanelWrapper.offsetHeight}px`;
+        let bottomPanelHeaderOffsetHt = document.getElementById('bottom-panel-header').offsetHeight;
+        let searchContainerOffsetHt = document.getElementById('search-container').offsetHeight;
+        bottomPanelMinHt = bottomPanelHeaderOffsetHt + searchContainerOffsetHt;
+
+        let bottomPanelTop = fullViewportHt - bottomPanelMinHt;
+        document.getElementById('bottom-panel-container').style.top = `${bottomPanelTop}px`;
 
     }
     catch {
@@ -108,9 +77,15 @@ function initElements() {
 
 function windowResizeEvent() {
     try {
+        let bottomPanelContainer = document.getElementById('bottom-panel-container');
+        let profileContainer = document.getElementById('profile-container');
+        //let bottomPanelWrapper = document.getElementById('bottom-panel-wrapper');
+        let mapContainer = document.getElementById('map-container');
+
+
+
         const VVH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
         const topOfBottomPanel = bottomPanelContainer.getBoundingClientRect().top;
-        visualDelta = VVH - fullViewportHt;
 
         if (profileOpen) { profileContainer.style.top = `${VVH - profileWrapper.offsetHeight}px`; }
         else {
@@ -119,17 +94,16 @@ function windowResizeEvent() {
         }
 
 
-        mapContainer.style.top = `${headerContainer.offsetHeight}px`;
-        mapContainer.style.bottom = `${footerContainer.offsetHeight}px`;
+        mapContainer.style.top = `${document.querySelector('header').offsetHeight}px`;
+        mapContainer.style.bottom = `${document.querySelector('footer').offsetHeight}px`;
 
-        const panelTopOffset = VVH - bottomPanelWrapper.offsetHeight;
+        const panelTopOffset = VVH - bottomPanelMinHt;
         const stateTransform = getStateTransform(getPanelState())
-        if (stateTransform < panelTopOffset){
+        if (getPanelState() != 'min' && stateTransform < panelTopOffset) {
             bottomPanelContainer.style.top = `${stateTransform}px`;
-        } else if (getPanelState() === 'min' || stateTransform > panelTopOffset || topOfBottomPanel > panelTopOffset) {   
+        } else if (getPanelState() === "min" || stateTransform > panelTopOffset || topOfBottomPanel > panelTopOffset) {
             bottomPanelContainer.style.top = `${panelTopOffset}px`;
         }
-        updateCurrentBottomPanelHt();
 
         window.scrollTo(0, 0);
     }

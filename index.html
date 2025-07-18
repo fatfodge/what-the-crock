@@ -11,29 +11,48 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <script type="importmap">
+    {
+        "imports": {
+            "geofire-common": "https://cdn.jsdelivr.net/npm/geofire-common@6.0.0/dist/geofire-common/index.esm.js"
+        }
+    }
+    </script>
+
+
 </head>
 
 <body>
     <header>
-        <h1>🥣 What the Crock V1.7.9</h1>
+        <h1>🥣 What the Crock V1.9.1</h1>
         <p>Find and rate the best French Onion Soup in Tampa Bay</p>
     </header>
     <main>
-        <div id="map-container">map-container</div>
+        <div id="map-container">
+            <div id="map"></div>
+            <button id="locate-btn" title="use current location">🎯</button>
+        </div>
         <div id="bottom-panel-container">
-            <div id="bottom-panel-wrapper">
-                <div class="bottom-panel-header">
+                <div id="bottom-panel-header" class="bottom-panel-header">
                     <div class="drag-handle"></div>
                 </div>
                 <div id="search-container">
                     <div id="search-bar">
-                        <input id="address-input" type="text" input="search" placeholder="Search for a location" enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="off">
+                        <input id="address-input" type="text" input="search" placeholder="Search for a location"
+                            enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off"
+                            spellcheck="off">
                         <button id="profile-btn" title="open my profile view">?</button>
                         <button id="cancel-search-btn" title="cancel-search" style="display: none;">Cancel</button>
                     </div>
+                </div>
+                <div id="search-results-container">
                     <ul id="search-results"></ul>
                 </div>
-            </div>
+                <div id="restaurants-in-view-container">
+                    <ul id="restaurants-in-view"></ul>
+                </div>
         </div>
         <div id="profile-container">
             <div id="profile-wrapper">
@@ -69,7 +88,9 @@
     <footer>
         <p>&copy; 2025 What the Crock</p>
     </footer>
-
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- hammer JS-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     <script type="module" src="app.js"></script>
 </body>
