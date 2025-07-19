@@ -211,14 +211,19 @@ footer {
     cursor: pointer;
 }
 
-#restaurants-in-view-container{
+#scrollable-container{
     overflow-y: scroll;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
+    display: flex;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
 }
 
 #restaurants-in-view {
     list-style: none;
     background-color: #8f7676;
-    ;
 }
 
 .visible-restaurant {

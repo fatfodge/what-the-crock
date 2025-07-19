@@ -31,7 +31,7 @@ export function getPanelState() {
  * @param {string} req_state 
  * @returns {number}
  */
-export function getStateTransform(req_state){
+export function getStateTransform(req_state) {
     return STATE_TRANSFORM_PX[req_state];
 }
 
@@ -73,14 +73,22 @@ export function setBottomPanelState(state, updateState = false) {
 
 function initSwipeFunctions() {
     bottomPanelMinHt = getBottomPanelMinHt();
+    let scrollableContainer = document.getElementById('scrollable-container');
     let bottomPanelElement = document.getElementById('bottom-panel-container');
     //let bottomPanelWrapper = document.getElementById('bottom-panel-wrapper');
     let initialPanelTop;
+    let initialScrollContainerTop;
+    let scrolling;
     const hammerManager = new Hammer(bottomPanelElement);
     hammerManager.get('pan').set({ direction: Hammer.DIRECTION_VERTICAL });
 
     hammerManager.on('panstart', (e) => {
         try {
+            if (scrollableContainer.contains(e.srcEvent.target)) {
+                initialScrollContainerTop = scrollableContainer.scrollTop;
+                scrolling = true;
+            }
+            else { scrolling = false; }
             bottomPanelElement.style.transition = 'none';
             initialPanelTop = bottomPanelElement.getBoundingClientRect().top;
         } catch { console.log("pan start failed"); }
@@ -89,13 +97,25 @@ function initSwipeFunctions() {
     hammerManager.on('pan', (e) => {
         try {
             closeKeyboard();
-            let newPanelTop = initialPanelTop + e.deltaY;
-            bottomPanelElement.style.top = `${newPanelTop}px`;
+            if (scrolling) {
+                let scrollList = document.getElementById('restaurants-in-view');
+                let maxScrollContainerTop = scrollableContainer.scrollHeight - scrollList.clientHeight;
+                let newScrollContainerTop = initialScrollContainerTop - e.deltaY;
+                if (newScrollContainerTop >= 0 && newScrollContainerTop <= maxScrollContainerTop) {
+                    scrollList.scrollTop = newScrollContainerTop;
+                    e.srcEvent.preventDefault();
+                }
+            }
+            else {
+                let newPanelTop = initialPanelTop + e.deltaY;
+                bottomPanelElement.style.top = `${newPanelTop}px`;
+            }
         } catch { console.log("pan failed"); }
     });
 
     hammerManager.on('panend', (e) => {
         try {
+            e.srcEvent.preventDefault();
             const VVH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
             const topOfBottomPanel = bottomPanelElement.getBoundingClientRect().top;
             bottomPanelElement.style.transition = 'top 0.5s ease-out';
