@@ -98,12 +98,12 @@ function initSwipeFunctions() {
         try {
             closeKeyboard();
             if (scrolling) {
+                e.srcEvent.preventDefault();
                 let scrollList = document.getElementById('restaurants-in-view');
-                let maxScrollContainerTop = scrollableContainer.scrollHeight - scrollList.clientHeight;
+                let maxScrollContainerTop = scrollableContainer.scrollHeight - scrollableContainer.clientHeight;
                 let newScrollContainerTop = initialScrollContainerTop - e.deltaY;
                 if (newScrollContainerTop >= 0 && newScrollContainerTop <= maxScrollContainerTop) {
-                    scrollList.scrollTop = newScrollContainerTop;
-                    e.srcEvent.preventDefault();
+                    scrollableContainer.scrollTop = newScrollContainerTop;
                 }
             }
             else {
