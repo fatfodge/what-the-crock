@@ -27,7 +27,6 @@ footer {
 }
 
 #bottom-panel-container {
-    max-height: 90dvh;
     background-color: aquamarine;
     transition: top 0.5s ease-out;
     position: fixed;
@@ -101,6 +100,12 @@ background-image: url('https://cdn-icons-png.flaticon.com/512/5274/5274888.png')
     width: 100%;
     padding: 15px 0;
     position: relative;
+    z-index: 100;
+}
+
+#search-container {
+    z-index: 100;
+    background-color: #bbd814;
 }
 
 #search-bar {

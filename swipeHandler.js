@@ -79,6 +79,13 @@ function initSwipeFunctions() {
     let initialPanelTop;
     let initialScrollContainerTop;
     let scrolling;
+
+    let isOverscrolled = false;
+    let overscrollStartDeltaY = null;
+    let allowPanelMove = false;
+    const OVERSCROLL_THRESHOLD = 150;
+    let maxScrollContainerTop;
+
     const hammerManager = new Hammer(bottomPanelElement);
     hammerManager.get('pan').set({ direction: Hammer.DIRECTION_VERTICAL });
 
@@ -86,24 +93,112 @@ function initSwipeFunctions() {
         try {
             if (scrollableContainer.contains(e.srcEvent.target)) {
                 initialScrollContainerTop = scrollableContainer.scrollTop;
+                maxScrollContainerTop = scrollableContainer.scrollHeight - scrollableContainer.clientHeight
+                if(maxScrollContainerTop > 0){
                 scrolling = true;
+                scrollableContainer.style.transition = 'none';
+            }
             }
             else { scrolling = false; }
+
+            isOverscrolled = false;
+            overscrollStartDeltaY = null;
+            allowPanelMove = !scrolling;
+
+            console.log("allow panel move", allowPanelMove);
+            console.log('scrolling', scrolling);
+
             bottomPanelElement.style.transition = 'none';
             initialPanelTop = bottomPanelElement.getBoundingClientRect().top;
         } catch { console.log("pan start failed"); }
     });
 
+    scrollableContainer.addEventListener('touchmove', function (e) {
+            e.preventDefault(); // stops native scroll, allows Hammer to see all deltaY
+
+    }, { passive: false });
+
+
     hammerManager.on('pan', (e) => {
         try {
             closeKeyboard();
             if (scrolling) {
-                e.srcEvent.preventDefault();
-                let scrollList = document.getElementById('restaurants-in-view');
-                let maxScrollContainerTop = scrollableContainer.scrollHeight - scrollableContainer.clientHeight;
+                //let maxScrollContainerTop = scrollableContainer.scrollHeight - scrollableContainer.clientHeight;
                 let newScrollContainerTop = initialScrollContainerTop - e.deltaY;
+                let panelMoveDelta;
                 if (newScrollContainerTop >= 0 && newScrollContainerTop <= maxScrollContainerTop) {
                     scrollableContainer.scrollTop = newScrollContainerTop;
+                }
+                else {
+                    let overscrollAmount;
+                    if (newScrollContainerTop < 0) {
+                        overscrollAmount = newScrollContainerTop; // Since newScrollContainerTop is negative
+                        //console.log("top of container. Overscroll by:", overscrollAmount, "pixels.");
+                    } else if (newScrollContainerTop > maxScrollContainerTop) {
+                        // overscrolling at the BOTTOM
+                        overscrollAmount = newScrollContainerTop - maxScrollContainerTop;
+                    } else {
+                        scrollableContainer.scrollTop = newScrollContainerTop;
+                        //scrollableContainer.style.transform = 'translateY(0px)';
+                        return; // In bounds, no overscroll
+                    }
+                    console.log('overscroll amount', overscrollAmount);
+
+                    if (!allowPanelMove) {
+                        const rubberBand = overscrollAmount * 0.6;
+                        scrollableContainer.style.transform = `translateY(${-rubberBand}px)`;
+                        if (Math.abs(overscrollAmount) > OVERSCROLL_THRESHOLD) {
+                            allowPanelMove = true;
+                            // Reset scroll container transform
+                            scrollableContainer.style.transition = 'transform 0.3s ease';
+                            scrollableContainer.style.transform = 'translateY(0px)';
+                            setTimeout(() => {
+                                scrollableContainer.style.transition = 'none';
+                            }, 300);
+                        }
+                    } else {
+                        panelMoveDelta = overscrollAmount;
+                        panelMoveDelta += overscrollAmount > 0 ? (-OVERSCROLL_THRESHOLD) : OVERSCROLL_THRESHOLD;
+                        console.log("panelmovedelta", panelMoveDelta);
+                        console.log('initial panel top', initialPanelTop);
+
+                        let newPanelTop = initialPanelTop - panelMoveDelta;
+                        console.log('new panel top', newPanelTop);
+                        bottomPanelElement.style.top = `${newPanelTop}px`;
+                    }
+
+
+
+
+                    /*
+                                        if (!hasOverscrolled) {
+                                            hasOverscrolled = true;
+                                            overscrollStartDeltaY = e.deltaY
+                                            allowPanelMove = false;
+                                        }
+                    
+                                        let overscrollDistance = e.deltaY - overscrollStartDeltaY;
+                                        if (Math.abs(overscrollDistance) >= OVERSCROLL_THRESHOLD) {
+                                            // Reset scroll container transform
+                                            scrollableContainer.style.transition = 'transform 0.3s ease';
+                                            scrollableContainer.style.transform = 'translateY(0px)';
+                                            setTimeout(() => {
+                                                scrollableContainer.style.transition = 'none';
+                                            }, 300);
+                                            allowPanelMove = true;
+                                        }
+                                        else {
+                                            const rubberBand = overscrollAmount * 0.25; // Tweak multiplier for softness
+                                            scrollableContainer.style.transform = `translateY(${-rubberBand}px)`;
+                                        }
+                    
+                                        if (allowPanelMove) {
+                    
+                                            let newPanelTop = initialPanelTop - overscrollAmount - OVERSCROLL_THRESHOLD;
+                                            bottomPanelElement.style.top = `${newPanelTop}px`;
+                    
+                                        }*/
+
                 }
             }
             else {
@@ -115,10 +210,22 @@ function initSwipeFunctions() {
 
     hammerManager.on('panend', (e) => {
         try {
+
+            // Reset scroll container transform
+            scrollableContainer.style.transition = 'transform 0.3s ease';
+            scrollableContainer.style.transform = 'translateY(0px)';
+            setTimeout(() => {
+                scrollableContainer.style.transition = 'none';
+            }, 300);
+
             e.srcEvent.preventDefault();
             const VVH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
             const topOfBottomPanel = bottomPanelElement.getBoundingClientRect().top;
             bottomPanelElement.style.transition = 'top 0.5s ease-out';
+
+            if (scrolling && !allowPanelMove) {
+                return;
+            }
 
             //if part of bottom panel is below the viewable screen
             if (topOfBottomPanel > VVH - bottomPanelMinHt) {
