@@ -1,4 +1,5 @@
 import { getRestaurantsInBounds } from "./firebaseService.js";
+import { displayRestaurantDetails, toggleBPSections } from "./ui.js";
 
 let mapInstance;
 
@@ -14,14 +15,46 @@ export function initMap() {
         }).addTo(mapInstance);
 
         mapInstance.on('moveend', async () => populateVisibleRestaurants());
+
+        populateVisibleRestaurants();
     } catch { console.log('error initilizing map'); }
 }
 
+export function focusOnUser(){
+    new Promise((resolve, reject) => {
+        if (!mapInstance) {
+            console.error("Map not initialized when attempting to center on user.");
+            return reject(new Error("Map not initialized."));
+        }
+        if (!navigator.geolocation) {
+            console.warn("Geolocation is not supported by your browser.");
+            return reject(new Error("Geolocation not supported."));
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const userLatLon = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                };
+                mapInstance.setView(userLatLon);
+                console.log("Map centered on user location.");
+                resolve(userLatLon);
+            },
+            (error) => {
+                console.error("Error getting user location:", error);
+                reject(error);
+            }
+        );
+    });
+    toggleBPSections("in_view");
+}
+
 async function populateVisibleRestaurants() {
-    //clear existing pis
+    let oldPins = [];
     mapInstance.eachLayer(layer => {
         if (layer instanceof L.Marker && layer.options.isRestaurantMarker) {
-            mapInstance.removeLayer(layer);
+            oldPins.push(layer);
         }
     });
 
@@ -34,13 +67,17 @@ async function populateVisibleRestaurants() {
         createPin(restaurant);
         restaurantsInView.appendChild(createRestaurantLI(restaurant));
     });
+
+    //clear old pins
+    oldPins.forEach(layer => mapInstance.removeLayer(layer));
 }
+
 
 function createPin(restaurant) {
     if (restaurant.location && restaurant.location.lat && restaurant.location.lng) {
         const marker = L.marker([restaurant.location.lat, restaurant.location.lng], { isRestaurantMarker: true })
             .addTo(mapInstance)
-        //.on('click', () => displayRestaurantDetails());
+        .on('click', () => displayRestaurantDetails(restaurant));
     }
 }
 
@@ -52,6 +89,7 @@ function createRestaurantLI(restaurant) {
                     <div class="main-text">${restaurant.name}</div>
                     <div class="secondary-text">${restaurant.address}</div>
                 `;
+    li.addEventListener('click', () => displayRestaurantDetails(restaurant))
     li.appendChild(contentDiv);
     return li;
 }

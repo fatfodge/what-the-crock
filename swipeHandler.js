@@ -75,7 +75,6 @@ function initSwipeFunctions() {
     bottomPanelMinHt = getBottomPanelMinHt();
     let scrollableContainer = document.getElementById('scrollable-container');
     let bottomPanelElement = document.getElementById('bottom-panel-container');
-    //let bottomPanelWrapper = document.getElementById('bottom-panel-wrapper');
     let initialPanelTop;
     let initialScrollContainerTop;
     let scrolling;
@@ -103,10 +102,7 @@ function initSwipeFunctions() {
 
             isOverscrolled = false;
             overscrollStartDeltaY = null;
-            allowPanelMove = !scrolling;
-
-            console.log("allow panel move", allowPanelMove);
-            console.log('scrolling', scrolling);
+            allowPanelMove = !scrolling;;
 
             bottomPanelElement.style.transition = 'none';
             initialPanelTop = bottomPanelElement.getBoundingClientRect().top;
@@ -123,7 +119,6 @@ function initSwipeFunctions() {
         try {
             closeKeyboard();
             if (scrolling) {
-                //let maxScrollContainerTop = scrollableContainer.scrollHeight - scrollableContainer.clientHeight;
                 let newScrollContainerTop = initialScrollContainerTop - e.deltaY;
                 let panelMoveDelta;
                 if (newScrollContainerTop >= 0 && newScrollContainerTop <= maxScrollContainerTop) {
@@ -133,16 +128,13 @@ function initSwipeFunctions() {
                     let overscrollAmount;
                     if (newScrollContainerTop < 0) {
                         overscrollAmount = newScrollContainerTop; // Since newScrollContainerTop is negative
-                        //console.log("top of container. Overscroll by:", overscrollAmount, "pixels.");
                     } else if (newScrollContainerTop > maxScrollContainerTop) {
                         // overscrolling at the BOTTOM
                         overscrollAmount = newScrollContainerTop - maxScrollContainerTop;
                     } else {
                         scrollableContainer.scrollTop = newScrollContainerTop;
-                        //scrollableContainer.style.transform = 'translateY(0px)';
                         return; // In bounds, no overscroll
                     }
-                    console.log('overscroll amount', overscrollAmount);
 
                     if (!allowPanelMove) {
                         const rubberBand = overscrollAmount * 0.6;
@@ -159,46 +151,10 @@ function initSwipeFunctions() {
                     } else {
                         panelMoveDelta = overscrollAmount;
                         panelMoveDelta += overscrollAmount > 0 ? (-OVERSCROLL_THRESHOLD) : OVERSCROLL_THRESHOLD;
-                        console.log("panelmovedelta", panelMoveDelta);
-                        console.log('initial panel top', initialPanelTop);
 
                         let newPanelTop = initialPanelTop - panelMoveDelta;
-                        console.log('new panel top', newPanelTop);
                         bottomPanelElement.style.top = `${newPanelTop}px`;
                     }
-
-
-
-
-                    /*
-                                        if (!hasOverscrolled) {
-                                            hasOverscrolled = true;
-                                            overscrollStartDeltaY = e.deltaY
-                                            allowPanelMove = false;
-                                        }
-                    
-                                        let overscrollDistance = e.deltaY - overscrollStartDeltaY;
-                                        if (Math.abs(overscrollDistance) >= OVERSCROLL_THRESHOLD) {
-                                            // Reset scroll container transform
-                                            scrollableContainer.style.transition = 'transform 0.3s ease';
-                                            scrollableContainer.style.transform = 'translateY(0px)';
-                                            setTimeout(() => {
-                                                scrollableContainer.style.transition = 'none';
-                                            }, 300);
-                                            allowPanelMove = true;
-                                        }
-                                        else {
-                                            const rubberBand = overscrollAmount * 0.25; // Tweak multiplier for softness
-                                            scrollableContainer.style.transform = `translateY(${-rubberBand}px)`;
-                                        }
-                    
-                                        if (allowPanelMove) {
-                    
-                                            let newPanelTop = initialPanelTop - overscrollAmount - OVERSCROLL_THRESHOLD;
-                                            bottomPanelElement.style.top = `${newPanelTop}px`;
-                    
-                                        }*/
-
                 }
             }
             else {

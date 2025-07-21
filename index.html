@@ -26,33 +26,44 @@
 
 <body>
     <header>
-        <h1>🥣 What the Crock V1.8.4</h1>
+        <h1>🥣 What the Crock V1.9.1</h1>
         <p>Find and rate the best French Onion Soup in Tampa Bay</p>
     </header>
     <main>
         <div id="map-container">
             <div id="map"></div>
-            <button id="locate-btn" title="use current location"></button>
+            <button id="locate-btn" title="use current location" ></button>
         </div>
         <div id="bottom-panel-container">
-                <div id="bottom-panel-header" class="bottom-panel-header">
-                    <div class="drag-handle"></div>
+            <div id="bottom-panel-header" class="bottom-panel-header">
+                <div class="drag-handle"></div>
+            </div>
+            <button id="show-search-btn" aria-label="Close" data-bp-sections="restaurant_detail,in_view">&times;</button>
+            <div id="search-container" data-bp-sections="search,in_view">
+                <div id="search-bar">
+                    <input id="address-input" type="text" input="search" placeholder="Search for a location"
+                        enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off"
+                        spellcheck="off">
+                    <button id="profile-btn" title="open my profile view">?</button>
+                    <button id="cancel-search-btn" title="cancel-search" style="display: none;">Cancel</button>
                 </div>
-                <div id="search-container">
-                    <div id="search-bar">
-                        <input id="address-input" type="text" input="search" placeholder="Search for a location"
-                            enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off"
-                            spellcheck="off">
-                        <button id="profile-btn" title="open my profile view">?</button>
-                        <button id="cancel-search-btn" title="cancel-search" style="display: none;">Cancel</button>
-                    </div>
+            </div>
+            <div id="restaurant-data" data-bp-sections="restaurant_detail">
+                <h3 id="restName"></h3>
+                <p id="restAddress"></p>
+                <div id="star-rating" class="star-rating">
+                    <span data-value="1" class="star">&#9733;</span>
+                    <span data-value="2" class="star">&#9733;</span>
+                    <span data-value="3" class="star">&#9733;</span>
+                    <span data-value="4" class="star">&#9733;</span>
+                    <span data-value="5" class="star">&#9733;</span>
                 </div>
-                <div id="search-results-container">
-                    <ul id="search-results"></ul>
-                </div>
-                <div id="scrollable-container">
-                    <ul id="restaurants-in-view"></ul>
-                </div>
+            </div>
+            <div id="scrollable-container">
+                <ul id="restaurant-reviews" data-bp-sections="restaurant_detail"></ul>
+                <ul id="restaurants-in-view" data-bp-sections="in_view"></ul>
+                <ul id="search-results" data-bp-sections="search"></ul>
+            </div>
         </div>
         <div id="profile-container">
             <div id="profile-wrapper">

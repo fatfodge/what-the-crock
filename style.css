@@ -261,3 +261,22 @@ background-image: url('https://cdn-icons-png.flaticon.com/512/5274/5274888.png')
     text-overflow: ellipsis;
     /* shows ... */
 }
+
+.star-rating .star {
+    font-size: 24px;
+    color: #ccc; /* default empty */
+    position: relative;
+    display: inline-block;
+}
+
+.star.full {
+    color: gold;
+}
+
+.star.half::before {
+    content: '★';
+    color: gold;
+    position: absolute;
+    width: 50%;
+    overflow: hidden;
+}

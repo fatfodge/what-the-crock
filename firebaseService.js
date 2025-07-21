@@ -76,8 +76,8 @@ export async function logoutUser() {
  * @param {L.bounds} bounds 
  * @returns {Promise<Array<object>>}
  */
-export async function getRestaurantsInBounds(bounds){
-    if (!bounds){
+export async function getRestaurantsInBounds(bounds) {
+    if (!bounds) {
         console.warn("no map bounds provided to getRestaurantInBounds");
         return;
     }
@@ -87,7 +87,7 @@ export async function getRestaurantsInBounds(bounds){
         [bounds.getSouthWest().lat, bounds.getSouthWest().lng]
     ) * 1000;
 
-    if (radiusInMeters > MAX_QUERY_RADIUS_METERS){
+    if (radiusInMeters > MAX_QUERY_RADIUS_METERS) {
         radiusInMeters = MAX_QUERY_RADIUS_METERS;
         console.warn(`query radius clamped to ${MAX_QUERY_RADIUS_METERS / 1000} km`)
     }
@@ -95,7 +95,7 @@ export async function getRestaurantsInBounds(bounds){
     const geohashBounds = geohashQueryBounds(center, radiusInMeters);
 
     const promises = [];
-    for (const b of geohashBounds){
+    for (const b of geohashBounds) {
         const q = query(
             collection(db, RESTAURANTS_COLLECTION),
             orderBy('geohash'),
@@ -113,11 +113,21 @@ export async function getRestaurantsInBounds(bounds){
         snapshot.docs.forEach(doc => {
             const data = doc.data();
             const restaurantLatLng = L.latLng(data.location?.lat, data.location?.lng);
-            if(bounds.contains(restaurantLatLng)){
-                matchingRestaurants.push({id: doc.id, ...data});
+            if (bounds.contains(restaurantLatLng)) {
+                matchingRestaurants.push({ id: doc.id, ...data });
             }
         });
     });
 
     return matchingRestaurants;
+}
+
+export async function getRestuarantReviews(restaurantID) {
+    const reviewsRef = collection(db, 'restaurants', restaurantID, 'reviews');
+    const reviewsSnapshot = await getDocs(reviewsRef);
+    const reviewsData = [];
+    reviewsSnapshot.forEach(doc => {
+        reviewsData.push(doc.data());
+    });
+    return reviewsData;
 }
