@@ -17,7 +17,10 @@ export function initUI() {
         let passwordReset = document.getElementById('forgotPasswordBtn');
         profileOpen = false;
 
-        document.getElementById('locate-btn').addEventListener('click', () => focusOnUser());
+        document.getElementById('locate-btn').addEventListener('click', () => {
+            setBottomPanelState('mid');
+            toggleBPSections('in_view');
+            focusOnUser()});
         document.getElementById('show-search-btn').addEventListener('click', () => toggleBPSections("search"));
         addressInput.addEventListener('click', () => setBottomPanelState('max'));
         addressInput.addEventListener('focus', () => addressInput.select());

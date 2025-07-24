@@ -1,5 +1,7 @@
 import { getRestaurantsInBounds } from "./firebaseService.js";
 import { displayRestaurantDetails, toggleBPSections } from "./ui.js";
+import { getPanelState, getStateTransform } from './swipeHandler.js';
+import { getBottomPanelMinHt } from './resizeHandler.js';
 
 let mapInstance;
 
@@ -20,7 +22,7 @@ export function initMap() {
     } catch { console.log('error initilizing map'); }
 }
 
-export function focusOnUser(){
+export function focusOnUser() {
     new Promise((resolve, reject) => {
         if (!mapInstance) {
             console.error("Map not initialized when attempting to center on user.");
@@ -37,7 +39,7 @@ export function focusOnUser(){
                     lat: position.coords.latitude,
                     lng: position.coords.longitude,
                 };
-                mapInstance.setView(userLatLon);
+                centerOnCoordinates(userLatLon);
                 console.log("Map centered on user location.");
                 resolve(userLatLon);
             },
@@ -49,6 +51,43 @@ export function focusOnUser(){
     });
     toggleBPSections("in_view");
 }
+
+function centerOnCoordinates(coordinates) {
+    const mapContainer = document.getElementById('map-container');
+    const mapRect = mapContainer.getBoundingClientRect();
+    const VVH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+
+    console.log('coordinates',coordinates);
+
+    const bottomPanelTopViewport = getPanelState() === 'min'
+        ? VVH - getBottomPanelMinHt()
+        : getStateTransform(getPanelState());
+
+    const targetScreenPixelX = mapRect.width / 2;
+
+    const visibleMapHeightInContainer = bottomPanelTopViewport - mapRect.top;
+    const targetScreenPixelY = visibleMapHeightInContainer / 2;
+
+    const currentTargetScreenPoint = mapInstance.latLngToContainerPoint(coordinates);
+
+    const deltaX = targetScreenPixelX - currentTargetScreenPoint.x;
+    const deltaY = targetScreenPixelY - currentTargetScreenPoint.y;
+
+    const currentCenterScreenPoint = mapInstance.latLngToContainerPoint(mapInstance.getCenter());
+
+    const newCenterScreenX = currentTargetScreenPoint.x;
+    const newCenterScreenY = currentCenterScreenPoint.y - deltaY;
+
+    const newCenterLatLng = mapInstance.containerPointToLatLng([newCenterScreenX, newCenterScreenY]);
+
+    const newNewCenterLatLng = {lat: newCenterLatLng.lat, lng: coordinates.lng};
+
+    console.log(newNewCenterLatLng);
+
+    mapInstance.panTo(newNewCenterLatLng);
+
+}
+
 
 async function populateVisibleRestaurants() {
     let oldPins = [];
@@ -77,7 +116,7 @@ function createPin(restaurant) {
     if (restaurant.location && restaurant.location.lat && restaurant.location.lng) {
         const marker = L.marker([restaurant.location.lat, restaurant.location.lng], { isRestaurantMarker: true })
             .addTo(mapInstance)
-        .on('click', () => displayRestaurantDetails(restaurant));
+            .on('click', () => displayRestaurantDetails(restaurant));
     }
 }
 
