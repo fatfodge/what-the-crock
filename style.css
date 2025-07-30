@@ -245,6 +245,13 @@ background-image: url('https://cdn-icons-png.flaticon.com/512/5274/5274888.png')
     border: 1px solid #ccc;
 }
 
+.search-result-item {
+    background-color: #fff;
+    min-height: 100px;
+    align-content: center;
+    border: 1px solid #ccc;
+}
+
 #restaurants-in-view .main-text {
     font-weight: bold;
     white-space: nowrap;

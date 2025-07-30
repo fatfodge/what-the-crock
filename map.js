@@ -5,6 +5,10 @@ import { getBottomPanelMinHt } from './resizeHandler.js';
 
 let mapInstance;
 
+export function getMapInstance(){
+    return mapInstance;
+}
+
 export function initMap() {
     try {
         let mapElementID = "map";
@@ -52,7 +56,7 @@ export function focusOnUser() {
     toggleBPSections("in_view");
 }
 
-function centerOnCoordinates(coordinates) {
+export function centerOnCoordinates(coordinates) {
     const mapContainer = document.getElementById('map-container');
     const mapRect = mapContainer.getBoundingClientRect();
     const VVH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
