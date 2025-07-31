@@ -23,7 +23,7 @@ function initServiceWorker(){
     if ('serviceWorker' in navigator) {
         console.log("serviceworker loading");
         window.addEventListener('load', () => { // Use 'load' to ensure everything is ready
-            navigator.serviceWorker.register('/sw.js') // Path to your service worker file
+            navigator.serviceWorker.register('./sw.js') // Path to your service worker file
                 .then((registration) => {
                     console.log('Service Worker registered with scope:', registration.scope);
                 })
