@@ -28,12 +28,21 @@
     }
     </script>
 
+        <!--googlePlace js-->
+   <!-- Add this section to your <head> -->
+    <script>
+  (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[q]=u;d.setLibraries=f=>{r.add(f);};b[l]=(f,...n)=>d[f]||u().then(()=>d[f]=b[c].maps[f].apply(null,n));})({key:"AIzaSyBQ17zqXPC0xDxCVid7l0eHGYCmIe-pMCQ",v:"beta"});
+</script>
+
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQ17zqXPC0xDxCVid7l0eHGYCmIe-pMCQ&libraries=places"></script>
+
+
 
 </head>
 
 <body>
     <header>
-        <h1>🥣 What the Crock V1.11.4</h1>
+        <h1>🥣 What the Crock V1.11.5</h1>
         <p>Find and rate the best French Onion Soup in Tampa Bay</p>
     </header>
     <main>
@@ -110,10 +119,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- hammer JS-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
-    <!--googlePlace js-->
-    <script async
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQ17zqXPC0xDxCVid7l0eHGYCmIe-pMCQ&loading=async&libraries=places&loading=async"
-        defer></script>
+
     <script type="module" src="app.js"></script>
 </body>
 

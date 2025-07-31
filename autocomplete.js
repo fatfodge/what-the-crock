@@ -33,6 +33,7 @@ function debounce(fn, delay) {
 
 
 async function getAutocompleteSuggestions() {
+    console.log('search');
     const addressInput = this;
     const val = addressInput.value.trim();
 
@@ -61,7 +62,7 @@ async function getAutocompleteSuggestions() {
         east: mapCenter.lng + 0.09,
         west: mapCenter.lng - 0.09,
     };
-    console.log('search');
+    
 
     // Ensure AutocompleteSessionToken is available
     if (!AutocompleteSessionToken) {
@@ -77,10 +78,13 @@ async function getAutocompleteSuggestions() {
         // Add any other desired restrictions here, e.g., types, componentRestrictions
         // types: ['establishment'] // Example: only search for establishments
     };
+    console.log('finding suggestions');
     try {
         const { suggestions } = await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
         searchResults.innerHTML = '';
         for (const suggestion of suggestions) {
+            console.log(suggestion);
+            console.log(suggestion.placePrediction.text.text);
             const li = document.createElement('li');
             li.classList.add('search-result-item');
 

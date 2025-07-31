@@ -12,9 +12,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     initUI();
     initFirebaseService();
     initMap();
-    initAutocomplete();
     initServiceWorker();
-
+    initAutocomplete();
 
     console.log("Main app initialized.");
 });
