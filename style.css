@@ -287,3 +287,9 @@ background-image: url('https://cdn-icons-png.flaticon.com/512/5274/5274888.png')
     width: 50%;
     overflow: hidden;
 }
+
+#search-results{
+    list-style: none;
+    width: 100%;
+    margin-right: 40px;
+}
