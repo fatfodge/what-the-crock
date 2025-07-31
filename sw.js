@@ -3,7 +3,7 @@
 // Define a cache name with a version number.
 // Increment this version number whenever you make changes to your static assets
 // that you want the Service Worker to update.
-const CACHE_NAME = 'my-restaurant-app-cache-v1.1'; // Increment for new app versions
+const CACHE_NAME = 'my-restaurant-app-cache-V1.11.1'; // Increment for new app versions
 
 // List of URLs to cache during installation.
 // Include all essential static assets for your app.
