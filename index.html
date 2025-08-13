@@ -1,126 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="m-0 p-0 w-full h-full overflow-hidden">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>What The Crock</title>
-
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="icons/favicon.png" type="image/png">
-    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="WTCrock">
-
-    <link rel="stylesheet" href="style.css">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
-    <script type="importmap">
-    {
-        "imports": {
-            "geofire-common": "https://cdn.jsdelivr.net/npm/geofire-common@6.0.0/dist/geofire-common/index.esm.js"
-        }
-    }
-    </script>
-
-        <!--googlePlace js-->
-   <!-- Add this section to your <head> -->
-    <script>
-  (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[q]=u;d.setLibraries=f=>{r.add(f);};b[l]=(f,...n)=>d[f]||u().then(()=>d[f]=b[c].maps[f].apply(null,n));})({key:"AIzaSyBQ17zqXPC0xDxCVid7l0eHGYCmIe-pMCQ",v:"beta"});
-</script>
-
-<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQ17zqXPC0xDxCVid7l0eHGYCmIe-pMCQ&libraries=places"></script>
-
-
-
+    <link rel="stylesheet" href="utility.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
-<body>
-    <header>
-        <h1>🥣 What the Crock V1.11.5</h1>
-        <p>Find and rate the best French Onion Soup in Tampa Bay</p>
-    </header>
-    <main>
-        <div id="map-container">
-            <div id="map"></div>
-            <button id="locate-btn" title="use current location" ></button>
-        </div>
-        <div id="bottom-panel-container">
-            <div id="bottom-panel-header" class="bottom-panel-header">
-                <div class="drag-handle"></div>
-            </div>
-            <button id="show-search-btn" aria-label="Close" data-bp-sections="restaurant_detail,in_view">&times;</button>
-            <div id="search-container" data-bp-sections="search,in_view">
-                <div id="search-bar">
-                    <input id="address-input" type="text" input="search" placeholder="Search for a location"
-                        enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off"
-                        spellcheck="off">
-                    <button id="profile-btn" title="open my profile view">?</button>
-                    <button id="cancel-search-btn" title="cancel-search" style="display: none;">Cancel</button>
-                </div>
-            </div>
-            <div id="restaurant-data" data-bp-sections="restaurant_detail">
-                <h3 id="restName"></h3>
-                <p id="restAddress"></p>
-                <div id="star-rating" class="star-rating">
-                    <span data-value="1" class="star">&#9733;</span>
-                    <span data-value="2" class="star">&#9733;</span>
-                    <span data-value="3" class="star">&#9733;</span>
-                    <span data-value="4" class="star">&#9733;</span>
-                    <span data-value="5" class="star">&#9733;</span>
-                </div>
-            </div>
-            <div id="scrollable-container">
-                <ul id="restaurant-reviews" data-bp-sections="restaurant_detail"></ul>
-                <ul id="restaurants-in-view" data-bp-sections="in_view"></ul>
-                <ul id="search-results" data-bp-sections="search"></ul>
-            </div>
-        </div>
-        <div id="profile-container">
-            <div id="profile-wrapper">
-                <button id="close-profile-container" class="close-btn" aria-label="Close">&times;</button>
-                <div id="login-form" class="login-form">
-                    <div id="loginAlert" class="alert">
-                        <span id="alertMessage">Message goes here</span>
-                    </div>
-                    <div class="form-row">
-                        <input type="email" id="emailInput" placeholder="Email" />
-                        <button id="signupBtn">Sign Up</button>
-                    </div>
-
-                    <div class="form-row">
-                        <input type="password" id="passwordInput" placeholder="Password" />
-                        <button id="forgotPasswordBtn">Forgot Password</button>
-                    </div>
-
-                    <div class="form-row">
-                        <button id="loginBtn">Log In</button>
-                    </div>
-                </div>
-                <div id="activeUserFrom">
-                    <button id="lgoutBtn">Log Out</button>
-                    <div id="adminPanelSheet" style="display:none;">
-                        <h3>Pending Submissions</h3>
-                        <div id="pendingSubmissionsList"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-    <footer>
-        <p>&copy; 2025 What the Crock</p>
-    </footer>
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- hammer JS-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
-
-    <script type="module" src="app.js"></script>
+<body class="m-0 p-0 pos-fixed w-full h-full top-0 left-0 d-flex flex-col">
+    <header class="flex-shrink-0">what the crock</header>
+    <map class="flex-grow">map</map>
+    <footer class="flex-shrink-0">&copy; 2025</footer>
 </body>
+
+<foot></foot>
 
 </html>
