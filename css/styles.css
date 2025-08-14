@@ -1,0 +1,23 @@
+body{
+    background-color: rgb(95, 95, 95);
+}
+
+header{
+    background-color: aliceblue;
+}
+
+footer{
+    background-color: antiquewhite;
+}
+
+map{
+    background-color: aquamarine;
+}
+
+#bottom-widget{
+    background-color: aqua;
+}
+
+#drag-handle{
+    background-color: azure;
+}

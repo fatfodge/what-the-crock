@@ -1,19 +1,35 @@
 <!DOCTYPE html>
-<html lang="en" class="m-0 p-0 w-full h-full overflow-hidden">
+<html lang="en" class="m-0 p-0 w-100dv h-10dv overflow-hidden">
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <link rel="stylesheet" href="utility.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/utility.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<body class="m-0 p-0 pos-fixed w-full h-full top-0 left-0 d-flex flex-col">
+<body class="m-0 p-0 pos-fixed w-100dv h-100dv top-0 left-0 d-flex flex-col">
     <header class="flex-shrink-0">what the crock</header>
     <map class="flex-grow">map</map>
     <footer class="flex-shrink-0">&copy; 2025</footer>
-</body>
+    <bottomWidget id="bottom-widget" class="pos-fixed top-offscreen bottom-0 z-50 d-flex flex-col w-100dv">
+        <div id="b-widget-header" class="flex-shrink-0 d-flex justify-center p-2">
+            <div id="drag-handle" style="width: 40px; height: 5px;"></div>
+        </div>
+        <div id="search-container" class="flex-shrink-0 d-flex flex-row items-center gap-2 p-2">
+            <div id="input-container" class="flex-grow pos-relative d-flex">
+                <input id="address-input" type="text" input="search" placeholder="Search for a location"
+                    enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="off"
+                    class = "flex-grow fs-lg pl-2 pr-2 pt-3 pb-3">
+                <button id="clear-search-btn" class="d-none pos-absolute z-10 top-0 right-0 bottom-0 m-2 ratio-1-1">&times;</button>
+            </div>
+            <button id="profile-btn" class="ratio-1-1 h-10 d-none" title="open my profile view">?</button>
+            <button id="cancel-search-btn" class="fs-lg" title="cancel-search">Cancel</button>
+        </div>
+        <div id="results-container" class="flex-shrink flex-grow">search container</div>
+    </bottomWidget>
 
-<foot></foot>
+    <script type="module" src="js/app.js"></script>
+</body>
 
 </html>
