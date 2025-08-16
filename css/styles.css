@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body{
     background-color: rgb(95, 95, 95);
 }
@@ -10,14 +14,26 @@ footer{
     background-color: antiquewhite;
 }
 
-map{
-    background-color: aquamarine;
-}
-
 #bottom-widget{
     background-color: aqua;
 }
 
 #drag-handle{
     background-color: azure;
+}
+
+#restaurant-data{
+    background-color: aliceblue;
+}
+
+#results-container{
+    background-color: antiquewhite;
+}
+
+li{
+    background-color: chocolate;
+}
+
+form{
+    background-color: darkgray;
 }

@@ -4,15 +4,37 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+    <title>What The Crock</title>
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icons/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="WTCrock">
+
     <link rel="stylesheet" href="css/utility.css">
     <link rel="stylesheet" href="css/styles.css">
+
+    <!-- geofire -->
+    <script type="importmap">
+    {
+        "imports": {
+            "geofire-common": "https://cdn.jsdelivr.net/npm/geofire-common@6.0.0/dist/geofire-common/index.esm.js"
+        }
+    }
+    </script>
 </head>
 
 <body class="m-0 p-0 pos-fixed w-100dv h-100dv top-0 left-0 d-flex flex-col">
     <header class="flex-shrink-0">what the crock</header>
-    <map class="flex-grow">map</map>
+    <main class="flex-grow pos-relative">
+        <button type="button" class="pos-absolute top-0 right-0 m-4 h-10 ratio-1-1 z-10"></button>
+        <div id="map" class="w-full h-full"></div>
+    </main>
     <footer class="flex-shrink-0">&copy; 2025</footer>
-    <bottomWidget id="bottom-widget" class="pos-fixed top-offscreen bottom-0 z-50 d-flex flex-col w-100dv">
+    <bottomWidget id="bottom-widget" class="pos-fixed top-offscreen bottom-0 z-20 d-flex flex-col w-100dv">
         <div id="b-widget-header" class="flex-shrink-0 d-flex justify-center p-2">
             <div id="drag-handle" style="width: 40px; height: 5px;"></div>
         </div>
@@ -20,15 +42,87 @@
             <div id="input-container" class="flex-grow pos-relative d-flex">
                 <input id="address-input" type="text" input="search" placeholder="Search for a location"
                     enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="off"
-                    class = "flex-grow fs-lg pl-2 pr-2 pt-3 pb-3">
-                <button id="clear-search-btn" class="d-none pos-absolute z-10 top-0 right-0 bottom-0 m-2 ratio-1-1">&times;</button>
+                    class="flex-grow fs-lg pl-2 pr-2 pt-3 pb-3">
+                <button id="clear-search-btn"
+                    class="d-none pos-absolute z-10 top-0 right-0 bottom-0 m-2 ratio-1-1">&times;</button>
             </div>
-            <button id="profile-btn" class="ratio-1-1 h-10 d-none" title="open my profile view">?</button>
-            <button id="cancel-search-btn" class="fs-lg" title="cancel-search">Cancel</button>
+            <button id="profile-btn" class="ratio-1-1 h-10" title="open my profile view">?</button>
+            <button id="cancel-search-btn" class="fs-lg d-none" title="cancel-search">Cancel</button>
         </div>
-        <div id="results-container" class="flex-shrink flex-grow">search container</div>
+        <div id="restaurant-data" class="d-none">
+            <h3 id="restName"></h3>
+            <p id="restAddress"></p>
+            <div id="rest-star-rating">
+                <span data-value="1">&#9733;</span>
+                <span data-value="2">&#9733;</span>
+                <span data-value="3">&#9733;</span>
+                <span data-value="4">&#9733;</span>
+                <span data-value="5">&#9733;</span>
+            </div>
+        </div>
+        <div id="results-container" class="flex-shrink flex-grow">
+            <ul id="restaurant-reviews" class="d-none"></ul>
+            <ul id="restaurants-in-view"></ul>
+            <ul id="search-results" class="d-none"></ul>
+        </div>
     </bottomWidget>
+    <form id="login-form" class="pos-fixed d-flex flex-col z-50 w-100dv p-4 bottom-0 top-offscreen">
+        <button type="button" aria-label="Close"
+            class="close-profile-btn pos-absolute  ratio-1-1 top-0 right-0 m-4 z-10">&times;</button>
+        <h2 class="mb-3 text-center">Sign In</h2>
 
+        <label for="email" class="mb-1">Username/Email</label>
+        <input type="text" id="email" name="email" required class="mb-2 p-2">
+
+        <div class="d-flex flex-row">
+            <label for="password" class="mb-1 flex-grow">Password</label>
+            <a href="#" class="fs-sm mb-3 text-right">Forgot password?</a>
+        </div>
+        <input type="password" id="password" name="password" required class="mb-2 p-2">
+
+        <button type="submit" class="p-2 fw-bold mb-2">Sign In</button>
+
+        <p id="signin-error" class="text-center fw-bold text-red mb-2"></p>
+
+        <div class="text-center d-flex items-center justify-center flex-grow">Not currently a user?</div>
+        <button type="button" id="create-account-btn" class="p-2 fw-bold mb-2">Create New Account</button>
+    </form>
+    <form id="signup-form" class="pos-fixed d-flex flex-col p-4 z-40 w-100dv bottom-0 top-offscreen">
+        <button aria-label="Close" type="button"
+            class="close-profile-btn pos-absolute  ratio-1-1 top-0 right-0 m-4 z-10">&times;</button>
+        <h2 class="mb-3 text-center">Create Account</h2>
+
+        <label for="username" class="mb-1">Username</label>
+        <input type="text" id="username" name="username" required class="mb-2 p-2">
+
+        <label for="newEmail" class="mb-1">Email</label>
+        <input type="email" id="newEmail" name="newEmail" required class="mb-2 p-2">
+
+        <label for="newPassword" class="mb-1">Password</label>
+        <input type="password" id="newPassword" name="newPassword" required class="mb-2 p-2">
+
+        <div>by creating an account you agree to whatever</div>
+
+        <button type="submit" class="pos-relative p-2 fw-bold mb-2">Create Account</button>
+
+        <p id="signup-error" class="text-center fw-bold text-red mb-2"></p>
+    </form>
+    <form id="activeUserFrom" class="pos-fixed z-30 w-100dv bottom-0 p-4 top-offscreen">
+        <button aria-label="Close"
+            class="close-profile-btn pos-absolute  ratio-1-1 top-0 right-0 m-4 z-10">&times;</button>
+        <button type="button" id="lgoutBtn">Log Out</button>
+        <div id="adminPanelSheet">
+            <h3>Pending Submissions</h3>
+            <div id="pendingSubmissionsList"></div>
+        </div>
+    </form>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- hammer JS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+
+    <!-- app JS-->
     <script type="module" src="js/app.js"></script>
 </body>
 
