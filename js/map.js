@@ -5,13 +5,8 @@
 
 let mapInstance;
 
-export function getMapInstance(){
-    return mapInstance;
-}
-
 export function initMap() {
     try {
-        console.log("init map");
         let mapElementID = "map";
         let initCoords = [27.964157, -82.452606];
         let initZoom = 11;
@@ -21,15 +16,12 @@ export function initMap() {
             attribution: '© OpenStreetMap contributors'
         }).addTo(mapInstance);
 
-        setTimeout(() => {
-            mapInstance.invalidateSize();
-        }, 100);
+        mapInstance.on('moveend', async () => populateVisibleRestaurants());
 
-       // mapInstance.on('moveend', async () => populateVisibleRestaurants());
-
-        //populateVisibleRestaurants();
+        populateVisibleRestaurants();
     } catch { console.log('error initilizing map'); }
 }
+
 
 export function focusOnUser() {
     new Promise((resolve, reject) => {
