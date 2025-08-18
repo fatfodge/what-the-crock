@@ -151,9 +151,9 @@ export function initSwipeHandler() {
         }
         //no significant change
         else {
-            if (Math.abs(topOfBottomPanel - STATE_TRANSFORM_PX.mid) > Math.abs(topOfBottomPanel - STATE_TRANSFORM_PX.max)) {
+            if (Math.abs(topOfBottomPanel - STATE_OFFSET_PX.mid) > Math.abs(topOfBottomPanel - STATE_OFFSET_PX.max)) {
                 newPanelState = "max";
-            } else if (Math.abs(topOfBottomPanel - STATE_TRANSFORM_PX.mid) > Math.abs(topOfBottomPanel - STATE_TRANSFORM_PX.min)) {
+            } else if (Math.abs(topOfBottomPanel - STATE_OFFSET_PX.mid) > Math.abs(topOfBottomPanel - STATE_OFFSET_PX.min)) {
                 newPanelState = "min";
             } else {
                 newPanelState = "mid";
@@ -172,18 +172,27 @@ export function setBWHeight(state) {
         console.log("not in bottom panel state keys");
         return;
     }
+
     const bWidget = document.getElementById('bottom-widget');
     bWidget.style.top = `${fvh - STATE_OFFSET_PX[state]}px`;
 
-    prevBWidgetState = bWidgetState;
-    bWidgetState = state;
+    if (state != bWidgetState) {
+        document.getElementById('cancel-search-btn').classList.add('d-none');
+        document.getElementById('profile-btn').classList.remove('d-none');
+        prevBWidgetState = bWidgetState;
+        bWidgetState = state;
+    }
+}
+
+export function getBWidgetHt(state) {
+    return STATE_OFFSET_PX[state];
 }
 
 /**
  * get bottom widget state
  * @returns {String}
  */
-export function getBWidgetState(){
+export function getBWidgetState() {
     return bWidgetState;
 }
 
@@ -191,7 +200,7 @@ export function getBWidgetState(){
  * get previous bottom widget state
  * @returns {String}
  */
-export function getPrevBWidgetState(){
+export function getPrevBWidgetState() {
     return prevBWidgetState;
 }
 

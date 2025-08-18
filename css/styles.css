@@ -14,19 +14,19 @@ footer{
     background-color: antiquewhite;
 }
 
-#bottom-widget{
+#bottom-widget, #bottom-widget-clone{
     background-color: aqua;
 }
 
-#drag-handle{
+#drag-handle, #drage-handle-clone{
     background-color: azure;
 }
 
-#restaurant-data{
+#restaurant-data, #restaurant-data-clone{
     background-color: aliceblue;
 }
 
-#results-container{
+#results-container, #results-container-clone{
     background-color: antiquewhite;
 }
 
@@ -36,4 +36,8 @@ li{
 
 form{
     background-color: darkgray;
+}
+
+#search-container, #search-container-clone{
+    background-color: blueviolet;
 }

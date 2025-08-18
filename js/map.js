@@ -1,7 +1,8 @@
-//import { getRestaurantsInBounds } from "./firebaseService.js";
+import { getRestaurantsInBounds } from "./firebaseService.js";
 //import { displayRestaurantDetails, toggleBPSections } from "./ui.js";
-//import { getPanelState, getStateTransform } from './swipehandler.js';
-//import { getBottomPanelMinHt } from './resizehandler.js';
+import { displayRestaurantDetails } from "./ui.js";
+
+import { getBWidgetState, getBWidgetHt } from "./swipehandler.js";
 
 let mapInstance;
 
@@ -41,7 +42,6 @@ export function focusOnUser() {
                     lng: position.coords.longitude,
                 };
                 centerOnCoordinates(userLatLon);
-                console.log("Map centered on user location.");
                 resolve(userLatLon);
             },
             (error) => {
@@ -50,7 +50,7 @@ export function focusOnUser() {
             }
         );
     });
-    toggleBPSections("in_view");
+    //toggleBPSections("in_view");
 }
 
 export function centerOnCoordinates(coordinates) {
@@ -58,11 +58,7 @@ export function centerOnCoordinates(coordinates) {
     const mapRect = mapContainer.getBoundingClientRect();
     const VVH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
 
-    console.log('coordinates',coordinates);
-
-    const bottomPanelTopViewport = getPanelState() === 'min'
-        ? VVH - getBottomPanelMinHt()
-        : getStateTransform(getPanelState());
+    const bottomPanelTopViewport = VVH - getBWidgetHt(getBWidgetState());
 
     const targetScreenPixelX = mapRect.width / 2;
 
@@ -82,8 +78,6 @@ export function centerOnCoordinates(coordinates) {
     const newCenterLatLng = mapInstance.containerPointToLatLng([newCenterScreenX, newCenterScreenY]);
 
     const newNewCenterLatLng = {lat: newCenterLatLng.lat, lng: coordinates.lng};
-
-    console.log(newNewCenterLatLng);
 
     mapInstance.panTo(newNewCenterLatLng);
 
@@ -125,8 +119,9 @@ function createRestaurantLI(restaurant) {
     const li = document.createElement('li');
     li.classList.add('visible-restaurant');
     const contentDiv = document.createElement('div');
+    contentDiv.classList.add("d-flex", "flex-col", "p-4", "gap-2", "fs-lg", "no-wrap", "overflow-clip");
     contentDiv.innerHTML = `
-                    <div class="main-text">${restaurant.name}</div>
+                    <div class="main-text fw-bold">${restaurant.name}</div>
                     <div class="secondary-text">${restaurant.address}</div>
                 `;
     li.addEventListener('click', () => displayRestaurantDetails(restaurant))

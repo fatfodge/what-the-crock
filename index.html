@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="m-0 p-0 w-100dv h-10dv overflow-hidden">
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="css/utility.css">
     <link rel="stylesheet" href="css/styles.css">
 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
     <!-- geofire -->
     <script type="importmap">
     {
@@ -27,18 +29,18 @@
     </script>
 </head>
 
-<body class="m-0 p-0 pos-fixed w-100dv h-100dv top-0 left-0">
-    <header class="z-10 w-full pos-fixed top-0 left-0">what the crock</header>
-    <main class="z-0 w-100dv h-100dv pos-fixed top-0 left-0">
-        <button type="button" class="pos-absolute top-0 right-0 m-4 h-10 ratio-1-1 z-10"></button>
-        <div id="map" class="w-full h-full"></div>
+<body class="m-0 p-0 pos-fixed w-100dv h-100dv top-0 left-0 d-flex flex-col">
+    <header class="flex-shrink-0">what the crock</header>
+    <main id="map-container" class="flex-grow pos-relative d-flex z-10">
+        <button id="user-focus" type="button" class="pos-absolute top-0 right-0 m-4 h-10 ratio-1-1 z-20"></button>
+        <map id="map" class="w-full h-full z-10"></map>
     </main>
-    <footer class="z-10 w-full pos-fixed bottom-0 left-0">&copy; 2025</footer>
-    <bottomWidget id="bottom-widget" class="pos-fixed top-offscreen bottom-0 z-20 d-flex flex-col w-100dv">
-        <div id="b-widget-header" class="flex-shrink-0 d-flex justify-center p-2">
+    <footer class="flex-shrink-0">&copy; 2025</footer>
+    <bottomWidget id="bottom-widget" class="pos-fixed top-offscreen bottom-0 z-40 d-flex flex-col w-100dv">
+        <div id="b-widget-header" class="z-20 flex-shrink-0 d-flex justify-center p-2">
             <div id="drag-handle" style="width: 40px; height: 5px;"></div>
         </div>
-        <div id="search-container" class="flex-shrink-0 d-flex flex-row items-center gap-2 p-2">
+        <div id="search-container" class="z-20 flex-shrink-0 d-flex flex-row items-center gap-2 p-2">
             <div id="input-container" class="flex-grow pos-relative d-flex">
                 <input id="address-input" type="text" input="search" placeholder="Search for a location"
                     enterkeyhint="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="off"
@@ -49,21 +51,21 @@
             <button id="profile-btn" class="ratio-1-1 h-10" title="open my profile view">?</button>
             <button id="cancel-search-btn" class="fs-lg d-none" title="cancel-search">Cancel</button>
         </div>
-        <div id="restaurant-data" class="d-none">
+        <div id="restaurant-data" class="d-none z-20">
             <h3 id="restName"></h3>
             <p id="restAddress"></p>
-            <div id="rest-star-rating">
-                <span data-value="1">&#9733;</span>
-                <span data-value="2">&#9733;</span>
-                <span data-value="3">&#9733;</span>
-                <span data-value="4">&#9733;</span>
-                <span data-value="5">&#9733;</span>
+            <div id="star-rating">
+                <span data-value="1" class="star">&#9733;</span>
+                <span data-value="2" class="star">&#9733;</span>
+                <span data-value="3" class="star">&#9733;</span>
+                <span data-value="4" class="star">&#9733;</span>
+                <span data-value="5" class="star">&#9733;</span>
             </div>
         </div>
-        <div id="results-container" class="flex-shrink flex-grow">
-            <ul id="restaurant-reviews" class="d-none"></ul>
-            <ul id="restaurants-in-view"></ul>
-            <ul id="search-results" class="d-none"></ul>
+        <div id="results-container" class="z-10 flex-shrink flex-grow overflow-scroll">
+            <ul id="restaurant-reviews" class="d-none p-0 m-0" style="list-style: none;"></ul>
+            <ul id="restaurants-in-view" class="p-0 m-0" style="list-style: none;"></ul>
+            <ul id="search-results" class="d-none  p-0 m-0" style="list-style: none;"></ul>
         </div>
     </bottomWidget>
     <form id="login-form" class="pos-fixed d-flex flex-col z-50 w-100dv p-4 bottom-0 top-offscreen">
@@ -116,6 +118,7 @@
             <div id="pendingSubmissionsList"></div>
         </div>
     </form>
+
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 

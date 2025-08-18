@@ -145,6 +145,7 @@
 .overflow-hidden  { overflow: hidden; }
 .overflow-visible { overflow: visible; }
 .overflow-scroll  { overflow: scroll; }
+.overflow-clip    { overflow: clip; }
 
 .overflow-x-auto    { overflow-x: auto; }
 .overflow-x-hidden  { overflow-x: hidden; }
@@ -162,6 +163,8 @@
 .text-right  { text-align: right; }
 .fw-bold     { font-weight: bold; }
 .fw-normal   { font-weight: normal; }
+
+.no-wrap     { white-space: nowrap; }
 
 /* ===== Font sizes ===== */
 .fs-xs  { font-size: 0.75rem; }
